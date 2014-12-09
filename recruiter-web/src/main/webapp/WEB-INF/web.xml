@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+	<description>recruiter (web application security) project</description>
+
+	<context-param>
+		<description>
+            "Development" enables better error messages, including in the client side JavaScript, at the cost of performance.
+            "Production" turn off some error messages and emphasize performance.
+            https://blogs.oracle.com/rlubke/entry/jsf_2_0_new_feature2
+        </description>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+	<context-param>
+		<description>Send only the viewstate id to the client and keep the full state on the server.</description>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<context-param>
+		<description>http://jdevelopment.nl/jsf-22/#1127</description>
+		<param-name>javax.faces.SERIALIZE_SERVER_STATE</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<context-param>
+		<description>http://stackoverflow.com/a/7548821</description>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<description>Set twitter bootstrap theme for primefaces</description>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>bootstrap</param-value>
+	</context-param>
+
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<init-param>
+			<param-name>protocoll</param-name>
+			<param-value>https</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>15</session-timeout>
+		<cookie-config>
+			<http-only>true</http-only>
+			<secure>true</secure>
+		</cookie-config>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/public/signin.jsf</form-login-page>
+			<form-error-page>/WEB-INF/error.jsf</form-error-page>
+		</form-login-config>
+	</login-config>
+
+	<security-role>
+		<role-name>ADMIN</role-name>
+	</security-role>
+	<security-role>
+		<role-name>COMPANY</role-name>
+	</security-role>
+	<security-role>
+		<role-name>USER</role-name>
+	</security-role>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Https entire WebApp</web-resource-name>
+			<url-pattern>/public/*</url-pattern>
+		</web-resource-collection>
+		<!-- No Auth Contraint! -->
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Secure /my/* URLs</web-resource-name>
+			<url-pattern>/my/*</url-pattern>
+			<!--http-method>GET</http-method> <http-method>POST</http-method -->
+		</web-resource-collection>
+		<auth-constraint>
+			<description />
+			<role-name>USER</role-name>
+			<role-name>COMPANY</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Secure /admin/* URLs</web-resource-name>
+			<url-pattern>/admin/*</url-pattern>
+			<!--http-method>GET</http-method> <http-method>POST</http-method -->
+		</web-resource-collection>
+		<auth-constraint>
+			<description />
+			<role-name>ADMIN</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<welcome-file-list>
+		<welcome-file>index.jsf</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/error.jsf</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/error.jsf</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/error.jsf</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/WEB-INF/error.jsf</location>
+	</error-page>
+
+</web-app>

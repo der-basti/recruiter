@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsf/composite"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h1>Registrieren</h1>
+
+		<h:form id="frmSignin" styleClass="form-horizontal" pt:role="form">
+			<div class="form-group">
+				<h:outputLabel for="email" styleClass="col-sm-2 control-label">E-Mail *</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="email" value="#{signHome.email}"
+						styleClass="form-control" pt:type="email"
+						pt:placeholder="Enter E-Mail" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="password" styleClass="col-sm-2 control-label">Passwort *</h:outputLabel>
+				<div class="col-sm-10">
+					<p:password id="password" value="#{signHome.password}"
+						match="passwordConfirm" label="Password"
+						pt:placeholder="Enter password" styleClass="form-control"
+						required="true" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="passwordConfirm"
+					styleClass="col-sm-2 control-label">Passwort bestätigen *</h:outputLabel>
+				<div class="col-sm-10">
+					<p:password id="passwordConfirm" value="#{signHome.password}"
+						label="Password confirm" pt:placeholder="Confirm password"
+						styleClass="form-control" required="true" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<h:commandButton id="btnSubmit" action="#{signHome.register}"
+						value="Registrieren" styleClass="btn btn-default" />
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
