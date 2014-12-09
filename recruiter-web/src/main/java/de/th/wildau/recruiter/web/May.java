@@ -7,6 +7,12 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * A general permissions / privileges class.
+ * 
+ * @author s7n
+ *
+ */
 @Named
 @RequestScoped
 public class May implements Serializable {
@@ -20,7 +26,7 @@ public class May implements Serializable {
 	public boolean isUserInRole(String role) {
 		return getRequest().isUserInRole(role);
 	}
-	
+
 	protected HttpServletRequest getRequest() {
 		Object request = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();

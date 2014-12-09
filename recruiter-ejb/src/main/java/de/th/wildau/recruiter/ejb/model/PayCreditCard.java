@@ -17,6 +17,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import de.th.wildau.recruiter.ejb.PayCreditCardType;
 
+/**
+ * Represent a bank card.
+ * 
+ * @author s7n
+ *
+ */
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "payCreditCard")
 @Data
@@ -45,12 +51,12 @@ public class PayCreditCard extends PayAbstract {
 	@NotEmpty
 	@Pattern(regexp = "[0-9]{2}")
 	@Column(length = 2, nullable = false, updatable = false)
-	private String exDateMonth;
+	private String exMonth;
 
 	// exparation
 	@NotEmpty
 	@Pattern(regexp = "[0-9]{4}")
 	@Column(length = 4, nullable = false, updatable = false)
-	private String exDateYear;
+	private String exYear;
 
 }

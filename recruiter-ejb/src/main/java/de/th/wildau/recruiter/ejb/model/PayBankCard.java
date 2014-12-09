@@ -10,6 +10,12 @@ import lombok.EqualsAndHashCode;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * Represent a credit card.
+ * 
+ * @author s7n
+ *
+ */
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "paycc")
 @Data

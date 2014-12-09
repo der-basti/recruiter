@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,36 +28,36 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "comment")
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class Comment extends BaseEntity<Comment> {
 
-    private static final long serialVersionUID = 3437227935356832630L;
+	private static final long serialVersionUID = 3437227935356832630L;
 
-    @Setter(AccessLevel.NONE)
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+	@Setter(AccessLevel.NONE)
+	@Column(nullable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createDate;
 
-    @NotEmpty
-    @Size(min = 1, max = 255)
-    @Column(nullable = false)
-    private String content;
+	@NotEmpty
+	@Size(min = 1, max = 255)
+	@Column(nullable = false)
+	private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "ARTICLE_ID", nullable = false)
-    private Article article;
-    
-    // FIXME
-    private User user;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "article_id", nullable = false)
+	private Article article;
 
-    public Comment() {
-        // inizializer
-        this.createDate = new Date();
-    }
+	@OneToOne(optional = true)
+	private User user;
 
-    public Comment(final Article article, final @NotBlank String content) {
-        this();
-        this.article = article;
-        this.content = content.trim();
-    }
+	public Comment() {
+		// inizializer
+		this.createDate = new Date();
+	}
+
+	public Comment(final Article article, final @NotBlank String content) {
+		this();
+		this.article = article;
+		this.content = content.trim();
+	}
 }

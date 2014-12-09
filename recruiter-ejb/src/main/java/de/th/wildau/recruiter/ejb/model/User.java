@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
@@ -50,39 +51,48 @@ public class User extends BaseEntity<User> {
 	@Column(length = 63, nullable = false, unique = true)
 	private String email;
 
+	/**
+	 * Requirements: minimum 8 chars in total, at least two letters, at least
+	 * two digits or symbols
+	 * 
+	 */
 	@Getter(AccessLevel.NONE)
 	@NotBlank
-	@Size(min = 6, max = 255)
-	// TODO @Pattern(regexp = "")
+	@Size(min = 8, max = 255)
+	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,255})")
 	@Column(nullable = false)
 	private String password;
 
+	/**
+	 * Automatically generated.
+	 */
 	@Getter(AccessLevel.MODULE)
 	@Setter(AccessLevel.NONE)
 	@Column(length = 32, nullable = false, updatable = false)
 	private String passwordSalt;
 
+	/**
+	 * Required to activate a account.
+	 */
 	@Getter(AccessLevel.MODULE)
 	@Setter(AccessLevel.NONE)
 	private String activationKey;
 
+	/**
+	 * Default 0.
+	 */
 	@Getter(AccessLevel.MODULE)
 	@Setter(AccessLevel.MODULE)
-	@Column(nullable = false)
-	// FIXME columnDefinition = "Integer default '0'"
+	@Column(nullable = false, columnDefinition = "integer default 0")
 	private Integer signinAttempts;
 
 	@ManyToMany
-	@JoinTable(name = BaseEntity.DB_PREFIX + "USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+	@JoinTable(name = BaseEntity.DB_PREFIX + "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles;
 
 	@OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
 	private Address address;
 
-	/*
-	 * @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy =
-	 * "user") private List<Article> articles = new ArrayList<>();
-	 */
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
 	private List<Purchase> purchases;
 

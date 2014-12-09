@@ -90,17 +90,6 @@ public abstract class AbstractHome implements Serializable {
 		return hasRole(RoleName.USER.name());
 	}
 
-	private String getMessage(final FacesContext facesContext,
-			final String msgKey, final Object... args) {
-		Locale locale = facesContext.getViewRoot().getLocale();
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
-		ResourceBundle bundle = ResourceBundle.getBundle("messages", locale,
-				classLoader);
-		String msgValue = bundle.getString(msgKey);
-		return MessageFormat.format(msgValue, args);
-	}
-
 	protected void addInfoMessage(final String message, final Object... args) {
 		addMessage(FacesMessage.SEVERITY_INFO, message, args);
 	}
@@ -119,6 +108,17 @@ public abstract class AbstractHome implements Serializable {
 		context.addMessage(null,
 				new FacesMessage(severity, getMessage(context, message, args),
 						null));
+	}
+
+	private String getMessage(final FacesContext facesContext,
+			final String msgKey, final Object... args) {
+		Locale locale = facesContext.getViewRoot().getLocale();
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		ResourceBundle bundle = ResourceBundle.getBundle("messages", locale,
+				classLoader);
+		String msgValue = bundle.getString(msgKey);
+		return MessageFormat.format(msgValue, args);
 	}
 
 	protected HttpServletRequest getRequest() {

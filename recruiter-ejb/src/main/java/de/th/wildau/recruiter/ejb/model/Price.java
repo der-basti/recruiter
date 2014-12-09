@@ -27,31 +27,30 @@ import de.th.wildau.recruiter.ejb.RoleName;
 @EqualsAndHashCode(callSuper = false)
 public class Price extends BaseEntity<Price> {
 
-    private static final long serialVersionUID = 4200697069607103301L;
+	private static final long serialVersionUID = 4200697069607103301L;
 
-    @Setter(AccessLevel.MODULE)
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(length = 31, nullable = false, unique = true)
-    private RoleName roleName;
+	@Setter(AccessLevel.MODULE)
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(length = 31, nullable = false, unique = true)
+	private RoleName roleName;
 
-    /**
-     * Default price is 1.
-     */
-    @Setter(AccessLevel.MODULE)
-    @NotNull
-    @Min(0)
-    @Column(nullable = false, precision = 10, scale = 2)
-    // FIXME columnDefinition = "Decimal(10,2) default '1.00'"
-    private BigDecimal price;
+	/**
+	 * Default price is 1. (precision = 10, scale = 2)
+	 */
+	@Setter(AccessLevel.MODULE)
+	@NotNull
+	@Min(0)
+	@Column(nullable = false, columnDefinition = "decimal(10,2) default 1")
+	private BigDecimal price;
 
-    public Price() {
-        // inizializer
-        this.price = BigDecimal.ONE;
-    }
+	public Price() {
+		// inizializer
+		this.price = BigDecimal.ONE;
+	}
 
-    public Price(final RoleName roleName) {
-        this();
-        this.roleName = roleName;
-    }
+	public Price(final RoleName roleName) {
+		this();
+		this.roleName = roleName;
+	}
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -35,13 +34,7 @@ public class Article extends BaseEntity<Article> {
 
 	private static final long serialVersionUID = 9221964675991419657L;
 
-	/*
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name = "USER_ID") private User user;
-	 */
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "PURCHASE_ID")
 	private Purchase purchase;
 
 	@Setter(AccessLevel.NONE)

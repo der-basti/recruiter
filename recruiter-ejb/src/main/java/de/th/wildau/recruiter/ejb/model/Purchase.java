@@ -8,9 +8,9 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,7 +37,6 @@ public class Purchase extends BaseEntity<Purchase> {
 	private static final long serialVersionUID = 6366829386091762923L;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "USER_ID", nullable = false)
 	private User user;
 
 	@Setter(AccessLevel.NONE)
@@ -45,16 +44,18 @@ public class Purchase extends BaseEntity<Purchase> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date purchaseDate;
 
-	// FIXME payment
-	private PayAbstract pay;
-	
+	@OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+	private PayBankCard payBc;
+
+	@OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+	private PayCreditCard payCc;
+
 	/**
-	 * Default price is 1.
+	 * Default price is 1. (precision = 10, scale = 2)
 	 */
 	@NotEmpty
 	@Min(0)
-	@Column(nullable = false, precision = 10, scale = 2)
-	// FIXME columnDefinition = "Decimal(10,2) default '1.00'"
+	@Column(nullable = false, columnDefinition = "decimal(10,2) default 1")
 	private BigDecimal price;
 
 	/**
@@ -76,9 +77,16 @@ public class Purchase extends BaseEntity<Purchase> {
 		this.articles = new HashSet<>();
 	}
 
-	public Purchase(final User user) {
+	public Purchase(final User user, final PayAbstract payment) {
 		this();
 		this.user = user;
+		if (payment instanceof PayBankCard) {
+			this.payBc = (PayBankCard) payment;
+		} else if (payment instanceof PayCreditCard) {
+			this.payCc = (PayCreditCard) payment;
+		} else {
+			throw new IllegalArgumentException("invalid payment type");
+		}
 	}
 
 }
