@@ -13,6 +13,10 @@
 <link
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
 	rel="stylesheet" type="text/css" />
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css" />
+<h:outputStylesheet library="css" name="screen.css" />
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -38,8 +42,24 @@
 			<ui:insert name="content" />
 		</div>
 		<div id="footer">
+			<hr />
 			<ui:insert name="footer">
 				<p class="text-center">2014 by Sebastian²</p>
+				<!-- 
+					#{localeBean.locale} | #{localeBean.language}
+					<ul class="dropdown-menu">
+						<li>
+							<h:commandLink value="#{i18n.naviLanguageDe}" action="#{localeBean.setLanguage('de')}" immediate="true">
+								<f:ajax render="@all" />
+							</h:commandLink>
+						</li>
+						<li>
+							<h:commandLink value="#{i18n.naviLanguageEn}" action="#{localeBean.setLanguage('en')}" immediate="true">
+								<f:ajax render="@all" />
+							</h:commandLink>
+						</li>
+					</ul>
+				 -->
 			</ui:insert>
 		</div>
 	</div>

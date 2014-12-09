@@ -8,6 +8,12 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+/**
+ * Handle the user locale.
+ * 
+ * @author s7n
+ *
+ */
 @Named
 @SessionScoped
 public class LocaleHome implements Serializable {

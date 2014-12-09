@@ -51,7 +51,7 @@ public class SignHome extends AbstractHome {
 				final String salt = "7MkZdGswgzvk1cDocG4v"; // this.userService.getSalt(this.email)
 				getRequest().login(this.email.toLowerCase(),
 						this.password + salt);
-				addInfoMessage("msg.SigninSuccessful");
+				addInfoMessage("msg.signin.successful");
 				if (isUser() || isCompany()) {
 					return redirect("my/");
 				} else if (isAdmin()) {
@@ -61,7 +61,7 @@ public class SignHome extends AbstractHome {
 				this.log.error(e.getMessage());
 			}
 			// TODO +1 login try
-			addErrorMessage("msg.SigninFailed");
+			addErrorMessage("msg.signin.failed");
 		}
 		return "public/signin.jsf";
 	}
@@ -86,7 +86,7 @@ public class SignHome extends AbstractHome {
 			if (session != null) {
 				session.invalidate();
 			}
-			// FIXME addInfoMessage("msgAuthHomeSignout");
+			addInfoMessage("msg.signout");
 		}
 		return redirectToRoot();
 	}

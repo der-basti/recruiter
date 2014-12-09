@@ -29,27 +29,40 @@
 						<ul class="nav navbar-nav">
 							<!-- left menu -->
 							<li><a
-								href="#{request.contextPath}/public/browse.jsf?faces-redirect=true">Durchsuchen</a></li>
+								href="#{request.contextPath}/public/browse.jsf?faces-redirect=true"><i
+									class="fa fa-eye" /> <!-- TODO i class="fa fa-binoculars" /-->
+									Durchsuchen</a></li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<!-- right menu -->
 							<li><a
-								href="#{request.contextPath}/public/card.jsf?faces-redirect=true">Warenkorb</a></li>
+								href="#{request.contextPath}/public/cart.jsf?faces-redirect=true"><i
+									class="fa fa-shopping-cart" /> Warenkorb</a></li>
 							<ui:fragment rendered="#{empty request.userPrincipal}">
 								<li><a
 									href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">Registrieren</a></li>
 								<li><a
-									href="#{request.contextPath}/public/signin.jsf?faces-redirect=true">Anmelden</a></li>
+									href="#{request.contextPath}/public/signin.jsf?faces-redirect=true"><i
+										class="fa fa-sign-in" /> Anmelden</a></li>
 							</ui:fragment>
 							<ui:fragment rendered="#{not empty request.userPrincipal}">
 								<li class="dropdown"><a href="#" class="dropdown-toggle"
 									data-toggle="dropdown"><i class="fa fa-user fa-fw" />
 										#{request.userPrincipal.name}<b class="caret"></b></a>
 									<ul class="dropdown-menu">
-										<li><a href="/#{baseHome.rootContext}/my">Übersicht</a></li>
+										<ui:fragment rendered="#{request.isUserInRole('ADMIN')}">
+											<li><a href="/#{baseHome.rootContext}/admin">Übersicht</a></li>
+										</ui:fragment>
+										<ui:fragment rendered="#{not request.isUserInRole('ADMIN')}">
+											<li><a href="/#{baseHome.rootContext}/my"><i
+													class="fa fa-tachometer" /> Übersicht</a></li>
+											<li><a
+												href="/#{baseHome.rootContext}/my/profile.jsf?faces-redirect=true"><i
+													class="fa fa-cogs" /> Profil</a></li>
+										</ui:fragment>
 										<li class="divider"></li>
-										<li><h:commandLink value="Abmelden"
-												action="#{signHome.logout}" /></li>
+										<li><h:commandLink value="" action="#{signHome.logout}">
+												<i class="fa fa-sign-out" /> Abmelden</h:commandLink></li>
 									</ul></li>
 
 							</ui:fragment>
