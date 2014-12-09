@@ -2,50 +2,64 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-    <head>
-        <title>navigation bar</title>
-    </head>
-    <body>
-        <ui:composition>
-            <!-- Static navbar -->
-            <h:form id="frmNav">
-                <div class="navbar navbar-default" role="navigation">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed"
-                                    data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span> <span
-                                    class="icon-bar"></span> <span class="icon-bar"></span> <span
-                                    class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="#{request.contextPath}/"><h:outputText
-                                    value="Personalvermittlung" /></a>
-                        </div>
-                        <div class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav">
-                                <!-- left menu -->
-                                <!--li><a href="#{request.contextPath}/browse.jsf?faces-redirect=true">Durchsuchen</a></li-->
-                                <li><a href="#{request.contextPath}/public">public</a></li>
-                                <li><a href="#{request.contextPath}/my">my</a></li>
-                                <li><a href="#{request.contextPath}/admin">admin</a></li>
-                                <li><a href="#{request.contextPath}/public/browse.jsf?faces-redirect=true">Durchsuchen</a></li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">
-                            	<!-- right menu -->
-                                <li><a href="#{request.contextPath}/public/card.jsf?faces-redirect=true">Warenkorb</a></li>
-                                <li><a href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">Registrieren</a></li>
-                                <li><a href="#{request.contextPath}/public/signin.jsf?faces-redirect=true">Anmelden</a></li>
-                            </ul>
-                        </div>
-                        <!--/.nav-collapse -->
-                    </div>
-                    <!--/.container-fluid -->
-                </div>
-            </h:form>
-        </ui:composition>
-    </body>
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<head>
+<title>navigation bar</title>
+</head>
+<body>
+	<ui:composition>
+		<!-- Static navbar -->
+		<h:form id="frmNav">
+			<div class="navbar navbar-default" role="navigation">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed"
+							data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#{request.contextPath}/public"><h:outputText
+								value="Personalvermittlung" /></a>
+					</div>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+							<!-- left menu -->
+							<li><a
+								href="#{request.contextPath}/public/browse.jsf?faces-redirect=true">Durchsuchen</a></li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<!-- right menu -->
+							<li><a
+								href="#{request.contextPath}/public/card.jsf?faces-redirect=true">Warenkorb</a></li>
+							<ui:fragment rendered="#{empty request.userPrincipal}">
+								<li><a
+									href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">Registrieren</a></li>
+								<li><a
+									href="#{request.contextPath}/public/signin.jsf?faces-redirect=true">Anmelden</a></li>
+							</ui:fragment>
+							<ui:fragment rendered="#{not empty request.userPrincipal}">
+								<li class="dropdown"><a href="#" class="dropdown-toggle"
+									data-toggle="dropdown"><i class="fa fa-user fa-fw" />
+										#{request.userPrincipal.name}<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a href="/#{baseHome.rootContext}/my">Übersicht</a></li>
+										<li class="divider"></li>
+										<li><h:commandLink value="Abmelden"
+												action="#{signHome.logout}" /></li>
+									</ul></li>
+
+							</ui:fragment>
+						</ul>
+					</div>
+					<!--/.nav-collapse -->
+				</div>
+				<!--/.container-fluid -->
+			</div>
+		</h:form>
+	</ui:composition>
+</body>
 </html>

@@ -15,29 +15,79 @@ import javax.servlet.http.HttpServletRequest;
 
 import lombok.Getter;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.th.wildau.recruiter.ejb.RoleName;
+
+/**
+ * Contains all general home/view affairs.
+ * 
+ * @author s7n
+ *
+ */
 public abstract class AbstractHome implements Serializable {
 
 	private static final long serialVersionUID = -7243694648872793544L;
+
+	private final Logger log = LoggerFactory.getLogger(AbstractHome.class);
 
 	@Inject
 	protected May may;
 
 	@Getter
-	private final String rootContext = "was";
+	private final String rootContext = "recruiter";
 
 	protected String redirectToRoot() {
 		return redirect("");
 	}
 
 	protected String redirect(final String urlFromRootContext) {
-		try {
-			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect("/" + rootContext + "/" + urlFromRootContext);
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return "fail";
+		StringBuilder sb = new StringBuilder("/");
+		// rootContext
+		sb.append(this.rootContext).append("/");
+		sb.append(urlFromRootContext);
+		// parameter
+		if (StringUtils.isNotBlank(urlFromRootContext)
+				&& urlFromRootContext.matches("(.jsf)$|(.xhtml)$")) {
+			sb.append("?faces-redirect=true");
 		}
-		return "success";
+		try {
+			// redirect
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect(sb.toString());
+			return "";
+		} catch (final IOException e) {
+			this.log.error(e.getMessage());
+		}
+		return "NaviFail";
+	}
+
+	public boolean isAuthenticated() {
+		final String remoteUser = FacesContext.getCurrentInstance()
+				.getExternalContext().getRemoteUser();
+		if (remoteUser != null && StringUtils.isNotBlank(remoteUser)
+				&& !remoteUser.equalsIgnoreCase("anonymous")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean hasRole(final String roleName) {
+		return getRequest().isUserInRole(roleName);
+	}
+
+	public boolean isAdmin() {
+		return hasRole(RoleName.ADMIN.name());
+	}
+
+	public boolean isCompany() {
+		return hasRole(RoleName.COMPANY.name());
+	}
+
+	public boolean isUser() {
+		return hasRole(RoleName.USER.name());
 	}
 
 	private String getMessage(final FacesContext facesContext,
