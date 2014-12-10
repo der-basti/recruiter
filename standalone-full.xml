@@ -238,7 +238,7 @@
             <iiop enable-by-default="false" use-qualified-name="false"/>
 <!-- default security domain start -->
             <!--default-security-domain value="other"/-->
-            <default-security-domain value="recruiter"/>
+            <default-security-domain value="recruiterSecurityDomain"/>
 <!-- default security domain end -->
             <default-missing-method-permissions-deny-access value="true"/>
         </subsystem>

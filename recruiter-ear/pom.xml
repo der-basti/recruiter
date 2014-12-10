@@ -24,6 +24,7 @@
 					<groupId>javax</groupId>
 					<artifactId>javaee-api</artifactId>
 				</exclusion>
+				<!-- see TODO issue HHH000389 -->
 				<exclusion>
 					<groupId>org.hibernate</groupId>
 					<artifactId>hibernate-core</artifactId>
@@ -73,7 +74,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -83,6 +84,42 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+			</plugin>
+			<!--plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-checkstyle-plugin</artifactId> 
+				<version>2.13</version> <executions> <execution> <id>validate</id -->
+			<!--phase>validate</phase -->
+			<!--configuration> <configLocation>checkstyle.xml</configLocation> <encoding>UTF-8</encoding> 
+				<consoleOutput>true</consoleOutput> <failsOnError>true</failsOnError> <linkXRef>false</linkXRef> 
+				</configuration> <goals> <goal>check</goal> </goals> </execution> </executions> 
+				</plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<passphrase>YOUR_PASSPHRASE</passphrase>
+				</configuration>
+				<executions>
+					<execution>
+						<id>sign-artifact</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>1.0.2.Final</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -91,7 +128,24 @@
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>2.2</version>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+					<version>3.0.1-SNAPSHOT</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.1-SNAPSHOT</version>
+			</plugin>
+			<!--plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-checkstyle-plugin</artifactId> 
+				<version>2.13</version> <reportSets> <reportSet> <reports> <report>checkstyle</report> 
+				</reports> </reportSet> </reportSets> </plugin -->
+		</plugins>
+	</reporting>
 </project>

@@ -1,6 +1,5 @@
 package de.th.wildau.recruiter.web;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -15,11 +14,11 @@ import org.slf4j.LoggerFactory;
 
 @ManagedBean
 @ViewScoped
-public class SignHome extends AbstractHome {
+public class SigninHome extends AbstractHome {
 
 	private static final long serialVersionUID = 227908819395127476L;
 
-	private final Logger log = LoggerFactory.getLogger(SignHome.class);
+	private final Logger log = LoggerFactory.getLogger(SigninHome.class);
 
 	@Getter
 	@Setter
@@ -28,15 +27,6 @@ public class SignHome extends AbstractHome {
 	@Getter
 	@Setter
 	private String password;
-
-	@PostConstruct
-	public void init() {
-		// this.user = new User();
-	}
-
-	public String register() {
-		return "";
-	}
 
 	/**
 	 * Authenticate a user with the emai and password.
