@@ -9,5 +9,11 @@
 	<ui:define name="content">
 		<h1>admin</h1>
         #{request.userPrincipal}
+        
+        <p:dataTable id="dtUsers" value="#{dashboardAdmin.users}" var="item">
+        	<p:column headerText="email">
+        		#{item.email}
+        	</p:column>
+        </p:dataTable>
     </ui:define>
 </ui:composition>

@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -19,8 +20,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,10 +36,10 @@ import com.google.common.hash.Hashing;
  *
  * @author s7n
  */
+@Getter
+@Setter
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "user")
-@Data
-@EqualsAndHashCode(callSuper = false)
 public class User extends BaseEntity<User> {
 
 	private static final long serialVersionUID = 8490082221406415512L;
@@ -66,7 +65,7 @@ public class User extends BaseEntity<User> {
 	/**
 	 * Automatically generated.
 	 */
-	@Getter(AccessLevel.MODULE)
+	// @Getter(AccessLevel.MODULE)
 	@Setter(AccessLevel.NONE)
 	@Column(length = 32, nullable = false, updatable = false)
 	private String passwordSalt;
@@ -74,26 +73,24 @@ public class User extends BaseEntity<User> {
 	/**
 	 * Required to activate a account.
 	 */
-	@Getter(AccessLevel.MODULE)
+	// @Getter(AccessLevel.MODULE)
 	@Setter(AccessLevel.NONE)
 	private String activationKey;
 
 	/**
 	 * Default 0.
 	 */
-	@Getter(AccessLevel.MODULE)
-	@Setter(AccessLevel.MODULE)
 	@Column(nullable = false, columnDefinition = "integer default 0")
 	private Integer signinAttempts;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = BaseEntity.DB_PREFIX + "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Address address;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Purchase> purchases;
 
 	public User() {

@@ -3,6 +3,7 @@ package de.th.wildau.recruiter.web;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +12,8 @@ import lombok.Setter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.th.wildau.recruiter.ejb.service.UserService;
 
 @ManagedBean
 @ViewScoped
@@ -28,6 +31,9 @@ public class SigninHome extends AbstractHome {
 	@Setter
 	private String password;
 
+	@Inject
+	private UserService userService;
+
 	/**
 	 * Authenticate a user with the emai and password.
 	 * 
@@ -37,11 +43,21 @@ public class SigninHome extends AbstractHome {
 		this.log.debug("authenticate user");
 		if (!this.may.isAuthenticated()) {
 			try {
-				// FIXME password salt
-				final String salt = "7MkZdGswgzvk1cDocG4v"; // this.userService.getSalt(this.email)
-				getRequest().login(this.email.toLowerCase(),
-						this.password + salt);
+				// FIXME move logic to backing beans
+				// check login attempts
+				if (this.userService.signinAttemptsTooMuch(this.email)) {
+					addErrorMessage("msg.sign.resetPw");
+					return "";
+				}
+				// login call
+				getRequest().login(
+						this.email.toLowerCase(),
+						this.password
+								+ this.userService.getPasswordSalt(this.email));
+				// success login > reset attempts
+				this.userService.signinAttemptsReset(this.email);
 				addInfoMessage("msg.signin.successful");
+				// navigation
 				if (isUser() || isCompany()) {
 					return redirect("my/");
 				} else if (isAdmin()) {
@@ -50,10 +66,11 @@ public class SigninHome extends AbstractHome {
 			} catch (final ServletException e) {
 				this.log.error(e.getMessage());
 			}
-			// TODO +1 login try
+			// login attempts +1
+			this.userService.signinAttemptsPlus(this.email);
 			addErrorMessage("msg.signin.failed");
 		}
-		return "public/signin.jsf";
+		return "";
 	}
 
 	/**
@@ -67,7 +84,7 @@ public class SigninHome extends AbstractHome {
 		if (this.may.isAuthenticated()) {
 			try {
 				getRequest().logout();
-			} catch (ServletException e) {
+			} catch (final ServletException e) {
 				this.log.error(e.getMessage());
 			}
 			HttpSession session = (HttpSession) FacesContext

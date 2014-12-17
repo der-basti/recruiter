@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,7 +35,7 @@ public class Article extends BaseEntity<Article> {
 
 	private static final long serialVersionUID = 9221964675991419657L;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private Purchase purchase;
 
 	@Setter(AccessLevel.NONE)
@@ -52,7 +53,7 @@ public class Article extends BaseEntity<Article> {
 	@Column(length = 1024, nullable = false)
 	private String content;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "article", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "article", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Comment> comments;
 
 	public Article() {

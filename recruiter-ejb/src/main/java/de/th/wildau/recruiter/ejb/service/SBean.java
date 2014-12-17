@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
  * Session Bean implementation class SBean
  */
 @Stateless
+// https://stackoverflow.com/questions/10889563/ejb-3-1-localbean-vs-no-annotation/10896403#10896403
 @LocalBean
 @Asynchronous
 public class SBean implements SBeanRemote, SBeanLocal {

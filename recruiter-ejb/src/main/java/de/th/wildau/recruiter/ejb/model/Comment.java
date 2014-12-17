@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -43,11 +44,11 @@ public class Comment extends BaseEntity<Comment> {
 	@Column(nullable = false)
 	private String content;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "article_id", nullable = false)
 	private Article article;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	private User user;
 
 	public Comment() {

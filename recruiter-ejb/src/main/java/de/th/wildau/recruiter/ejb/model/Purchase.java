@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -36,7 +37,7 @@ public class Purchase extends BaseEntity<Purchase> {
 
 	private static final long serialVersionUID = 6366829386091762923L;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private User user;
 
 	@Setter(AccessLevel.NONE)
@@ -44,10 +45,10 @@ public class Purchase extends BaseEntity<Purchase> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date purchaseDate;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true, fetch = FetchType.LAZY)
 	private PayBankCard payBc;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true, fetch = FetchType.LAZY)
 	private PayCreditCard payCc;
 
 	/**
@@ -66,7 +67,7 @@ public class Purchase extends BaseEntity<Purchase> {
 	@Column(nullable = false)
 	private Integer quantity;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "purchase")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "purchase", fetch = FetchType.LAZY)
 	private Set<Article> articles;
 
 	public Purchase() {
