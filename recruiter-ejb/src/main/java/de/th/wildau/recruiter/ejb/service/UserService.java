@@ -161,6 +161,13 @@ public class UserService {
 		}
 	}
 
+	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
+	public Address getAddress(final String email) {
+		final Address address = findUser(email).getAddress();
+		address.getName();
+		return address;
+	}
+
 	/**
 	 * Find salt for a specific user.
 	 * 
@@ -219,10 +226,14 @@ public class UserService {
 	 *             if no entity found
 	 * @return User or null if user doesn't exist.
 	 */
-	public User getUser(final String email) throws NoResultException {
+	public User getUser(final String email, final String... fetch)
+			throws NoResultException {
 		final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 		final CriteriaQuery<User> cq = cb.createQuery(User.class);
 		final Root<User> r = cq.from(User.class);
+		for (final String item : fetch) {
+			r.fetch(item);
+		}
 		cq.select(r).where(cb.equal(r.get("email"), email.toLowerCase()));
 		return this.em.createQuery(cq).getSingleResult();
 	}

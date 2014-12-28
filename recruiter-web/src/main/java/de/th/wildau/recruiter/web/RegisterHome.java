@@ -23,6 +23,12 @@ import de.th.wildau.recruiter.ejb.model.Role;
 import de.th.wildau.recruiter.ejb.model.User;
 import de.th.wildau.recruiter.ejb.service.UserService;
 
+/**
+ * Base controller class for account registration.
+ * 
+ * @author s7n
+ *
+ */
 @ManagedBean
 // TODO @Named
 @ViewScoped
@@ -80,7 +86,7 @@ public class RegisterHome extends AbstractHome {
 					this.user, this.address);
 			log.info("... user created");
 			addInfoMessage("msg.signup.emailSend");
-			return redirectToRoot();
+			return getContextPublic();
 		} catch (final BusinessException e) {
 			log.error(e.getMessage());
 			addErrorMessage(e);

@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import de.th.wildau.recruiter.ejb.service.UserService;
 
+/**
+ * 
+ * @author s7n
+ *
+ */
 @Named
 @ViewScoped
 public class ResetPasswordHome extends AbstractHome {

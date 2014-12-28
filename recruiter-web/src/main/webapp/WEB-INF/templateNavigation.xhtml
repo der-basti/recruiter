@@ -22,7 +22,7 @@
 								class="icon-bar"></span> <span class="icon-bar"></span> <span
 								class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="#{request.contextPath}/public"><h:outputText
+						<a class="navbar-brand" href="#{request.contextPath}/public/"><h:outputText
 								value="Personalvermittlung" /></a>
 					</div>
 					<div class="navbar-collapse collapse">
@@ -51,13 +51,13 @@
 										#{request.userPrincipal.name}<b class="caret"></b></a>
 									<ul class="dropdown-menu">
 										<ui:fragment rendered="#{request.isUserInRole('ADMIN')}">
-											<li><a href="/#{baseHome.rootContext}/admin">Übersicht</a></li>
+											<li><a href="/#{baseHome.contextRoot}/admin/">Übersicht</a></li>
 										</ui:fragment>
 										<ui:fragment rendered="#{not request.isUserInRole('ADMIN')}">
-											<li><a href="/#{baseHome.rootContext}/my"><i
+											<li><a href="/#{baseHome.contextRoot}/my/"><i
 													class="fa fa-tachometer" /> Übersicht</a></li>
 											<li><a
-												href="/#{baseHome.rootContext}/my/profile.jsf?faces-redirect=true"><i
+												href="/#{baseHome.contextRoot}/my/profile.jsf?faces-redirect=true"><i
 													class="fa fa-cogs" /> Profil</a></li>
 										</ui:fragment>
 										<li class="divider"></li>

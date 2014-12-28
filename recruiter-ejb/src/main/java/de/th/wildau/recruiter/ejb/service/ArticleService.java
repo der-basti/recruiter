@@ -1,6 +1,5 @@
 package de.th.wildau.recruiter.ejb.service;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +28,6 @@ public class ArticleService {
 
 	@Inject
 	private CrudService crud;
-
-	@Inject
-	private Principal principal;
 
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public void create() {

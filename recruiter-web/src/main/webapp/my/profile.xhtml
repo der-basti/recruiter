@@ -8,6 +8,68 @@
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 	<ui:define name="content">
 		<h1>profile</h1>
-        #{request.userPrincipal}
-    </ui:define>
+
+		<h:form id="frmProfile" styleClass="form-horizontal" role="form">
+			<div class="form-group">
+				<!-- user -->
+				<h:outputLabel for="email" value="E-Mail"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="email" value="#{profileHome.user.email}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="roles" value="Rolle"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="roles" value="#{profileHome.roleSet2String(profileHome.user.roles)}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="password" value="Passwort"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<span class="form-control"><a href="">Passwort ändern</a></span>
+				</div>
+
+				<!-- address -->
+				<h:outputLabel for="title" value="Title"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="title" value="#{profileHome.user.address.title}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="name" value="Name"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="name" value="#{profileHome.user.address.name}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="street" value="Straße"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="street" value="#{profileHome.user.address.street}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="streetNumber" value="Hausnummer"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="streetNumber"
+						value="#{profileHome.user.address.streetNumber}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="zipCode" value="Postleitzahl"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="zipCode" value="#{profileHome.user.address.zipCode}"
+						styleClass="form-control" />
+				</div>
+				<h:outputLabel for="city" value="Stadt"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="city" value="#{profileHome.user.address.city}"
+						styleClass="form-control" />
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
 </ui:composition>

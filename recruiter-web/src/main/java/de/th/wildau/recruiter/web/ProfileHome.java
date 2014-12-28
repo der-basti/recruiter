@@ -1,7 +1,5 @@
 package de.th.wildau.recruiter.web;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -12,28 +10,26 @@ import de.th.wildau.recruiter.ejb.model.User;
 import de.th.wildau.recruiter.ejb.service.UserService;
 
 /**
- * Base controller class for the admin dashboard.
+ * Base controller class for profile management.
  * 
  * @author s7n
  *
  */
 @Named
 @ViewScoped
-public class DashboardAdmin extends AbstractHome {
+public class ProfileHome extends AbstractHome {
 
-	private static final long serialVersionUID = 7490377105913699444L;
+	private static final long serialVersionUID = -8059542501435440194L;
 
 	@Getter
-	private List<User> users;
+	private User user;
 
 	@Inject
 	private UserService userService;
 
 	@PostConstruct
 	public void init() {
-		this.users = this.userService.getUsers();
+		this.user = this.userService.getUser(getRequest().getUserPrincipal()
+				.getName(), "roles", "address");
 	}
-
-	// XXX
-	// https://stackoverflow.com/questions/6141237/how-to-get-number-of-connected-users-and-their-role-using-j-security-check
 }

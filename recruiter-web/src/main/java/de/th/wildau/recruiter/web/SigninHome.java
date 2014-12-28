@@ -17,6 +17,12 @@ import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.service.UserService;
 
+/**
+ * Base controller class for account signin.
+ * 
+ * @author s7n
+ *
+ */
 @ManagedBean
 @ViewScoped
 public class SigninHome extends AbstractHome {
@@ -63,9 +69,9 @@ public class SigninHome extends AbstractHome {
 		}
 		// navigation cases
 		if (this.may.isUser() || this.may.isCompany()) {
-			return redirect("my/");
+			return "/my/index.jsf";
 		} else if (this.may.isAdmin()) {
-			return redirect("admin/");
+			return "/admin/index.jsf";
 		}
 		return "";
 	}
@@ -92,6 +98,6 @@ public class SigninHome extends AbstractHome {
 			}
 			addInfoMessage("msg.signout");
 		}
-		return redirectToRoot();
+		return getContextPublic();
 	}
 }

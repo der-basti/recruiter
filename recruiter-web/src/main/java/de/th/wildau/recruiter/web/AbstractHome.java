@@ -1,8 +1,9 @@
 package de.th.wildau.recruiter.web;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -13,14 +14,11 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
+import de.th.wildau.recruiter.ejb.model.Role;
 
 /**
  * Contains all general home/view affairs.
@@ -32,13 +30,27 @@ public abstract class AbstractHome implements Serializable {
 
 	private static final long serialVersionUID = -7243694648872793544L;
 
-	private final Logger log = LoggerFactory.getLogger(AbstractHome.class);
+	@Getter(value = AccessLevel.PROTECTED)
+	private final String contextPublic = "/public/index.jsf";
 
 	@Getter
-	private final String rootContext = "recruiter";
+	private final String contextRoot = "recruiter";
+	// ((HttpServletRequest)
+	// FacesContext.getCurrentInstance().getExternalContext().getRequest()).getContextPath()
 
 	@Inject
 	protected May may;
+
+	public String roleSet2String(final Collection<Role> roles) {
+		final StringBuilder sb = new StringBuilder();
+		for (final Iterator<Role> i = roles.iterator(); i.hasNext();) {
+			sb.append(getMessage(i.next().getName()));
+			if (i.hasNext()) {
+				sb.append(", ");
+			}
+		}
+		return sb.toString();
+	}
 
 	private void addFacesMessage(final Severity severity, final String message) {
 		final FacesContext context = FacesContext.getCurrentInstance();
@@ -98,30 +110,5 @@ public abstract class AbstractHome implements Serializable {
 				.getExternalContext().getRequest();
 		return request instanceof HttpServletRequest ? (HttpServletRequest) request
 				: null;
-	}
-
-	protected String redirect(final String urlFromRootContext) {
-		final StringBuilder sb = new StringBuilder("/");
-		// rootContext
-		sb.append(this.rootContext).append("/");
-		sb.append(urlFromRootContext);
-		// parameter
-		if (StringUtils.isNotBlank(urlFromRootContext)
-				&& urlFromRootContext.matches("(.jsf)$|(.xhtml)$")) {
-			sb.append("?faces-redirect=true");
-		}
-		try {
-			// redirect
-			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect(sb.toString());
-			return "";
-		} catch (final IOException e) {
-			this.log.error(e.getMessage());
-		}
-		return "NaviFail";
-	}
-
-	protected String redirectToRoot() {
-		return redirect("");
 	}
 }

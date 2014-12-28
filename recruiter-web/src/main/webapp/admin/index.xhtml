@@ -17,7 +17,7 @@
         	</p:column>
 			<p:column headerText="roles">
 				<ui:repeat value="#{item.roles}" var="j">
-					<!--#{j.role}-->
+					#{dashboardAdmin.roleSet2String(j)}
 				</ui:repeat>
 			</p:column>
 			<p:column headerText="activationKey">

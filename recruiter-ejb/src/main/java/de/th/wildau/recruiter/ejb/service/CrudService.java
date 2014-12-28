@@ -1,16 +1,19 @@
 package de.th.wildau.recruiter.ejb.service;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import de.th.wildau.recruiter.ejb.model.BaseEntity;
+import de.th.wildau.recruiter.ejb.model.User;
 
 /**
  * Create Read Update Delete.
@@ -20,6 +23,12 @@ import de.th.wildau.recruiter.ejb.model.BaseEntity;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 class CrudService {
+
+	@Inject
+	private Principal principal;
+
+	@Inject
+	private UserService userService;
 
 	@PersistenceContext
 	protected EntityManager em;
@@ -74,6 +83,24 @@ class CrudService {
 	protected <T extends BaseEntity<T>> T findById(final Class<T> clazz,
 			final long id) {
 		return this.em.find(clazz, id);
+	}
+
+	/**
+	 * Get current user.
+	 * 
+	 * @return User or {@code null}
+	 */
+	protected User getCurrentUser() {
+		return this.userService.findUser(getCurrentUserId());
+	}
+
+	/**
+	 * Get current user id (email).
+	 * 
+	 * @return String email
+	 */
+	protected String getCurrentUserId() {
+		return this.principal.getName();
 	}
 
 	/**
