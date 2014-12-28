@@ -43,11 +43,13 @@ public class Article extends BaseEntity<Article> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 
+	@Setter(value = AccessLevel.NONE)
 	@NotBlank
 	@Size(min = 2, max = 255)
 	@Column(nullable = false)
 	private String title;
 
+	@Setter(value = AccessLevel.NONE)
 	@NotBlank
 	@Size(min = 2, max = 1024)
 	@Column(length = 1024, nullable = false)
@@ -61,5 +63,13 @@ public class Article extends BaseEntity<Article> {
 		this.purchase = new Purchase();
 		this.createDate = new Date();
 		this.comments = new ArrayList<>();
+	}
+
+	public final void setTitle(final String title) {
+		this.title = clean(title);
+	}
+
+	public final void setContent(final String content) {
+		this.content = clean(content);
 	}
 }

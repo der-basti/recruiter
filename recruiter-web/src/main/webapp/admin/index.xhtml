@@ -10,10 +10,22 @@
 		<h1>admin</h1>
         #{request.userPrincipal}
         
-        <p:dataTable id="dtUsers" value="#{dashboardAdmin.users}" var="item">
-        	<p:column headerText="email">
+        <p:dataTable id="dtUsers" value="#{dashboardAdmin.users}"
+			var="item">
+			<p:column headerText="email">
         		#{item.email}
         	</p:column>
-        </p:dataTable>
-    </ui:define>
+			<p:column headerText="roles">
+				<ui:repeat value="#{item.roles}" var="j">
+					<!--#{j.role}-->
+				</ui:repeat>
+			</p:column>
+			<p:column headerText="activationKey">
+        		#{item.activationKey}
+        	</p:column>
+			<p:column headerText="signinAttempts">
+        		#{item.signinAttempts}
+        	</p:column>
+		</p:dataTable>
+	</ui:define>
 </ui:composition>

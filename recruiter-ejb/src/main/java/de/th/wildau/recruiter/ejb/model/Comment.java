@@ -39,6 +39,7 @@ public class Comment extends BaseEntity<Comment> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 
+	@Setter(value = AccessLevel.NONE)
 	@NotEmpty
 	@Size(min = 1, max = 255)
 	@Column(nullable = false)
@@ -60,5 +61,9 @@ public class Comment extends BaseEntity<Comment> {
 		this();
 		this.article = article;
 		this.content = content.trim();
+	}
+
+	public final void setContent(final String content) {
+		this.content = clean(content);
 	}
 }

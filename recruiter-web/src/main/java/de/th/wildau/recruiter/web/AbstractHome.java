@@ -19,7 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.th.wildau.recruiter.ejb.RoleName;
+import de.th.wildau.recruiter.ejb.BusinessError;
+import de.th.wildau.recruiter.ejb.BusinessException;
 
 /**
  * Contains all general home/view affairs.
@@ -33,18 +34,74 @@ public abstract class AbstractHome implements Serializable {
 
 	private final Logger log = LoggerFactory.getLogger(AbstractHome.class);
 
-	@Inject
-	protected May may;
-
 	@Getter
 	private final String rootContext = "recruiter";
 
-	protected String redirectToRoot() {
-		return redirect("");
+	@Inject
+	protected May may;
+
+	private void addFacesMessage(final Severity severity, final String message) {
+		final FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage(severity, message, null));
+	}
+
+	private String getMessage(final FacesContext facesContext,
+			final String msgKey, final Object... args) {
+		final Locale locale = facesContext.getViewRoot().getLocale();
+		final ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		final ResourceBundle bundle = ResourceBundle.getBundle("messages",
+				locale, classLoader);
+		final String msgValue = bundle.getString(msgKey);
+		return MessageFormat.format(msgValue, args);
+	}
+
+	protected void addErrorMessage(final BusinessException e) {
+		for (final BusinessError error : e.getErrors()) {
+			addFacesMessage(FacesMessage.SEVERITY_ERROR, getMessage(error));
+		}
+	}
+
+	protected void addErrorMessage(final String message, final Object... args) {
+		addFacesMessage(FacesMessage.SEVERITY_ERROR,
+				getMessage(FacesContext.getCurrentInstance(), message, args));
+	}
+
+	protected void addInfoMessage(final String message, final Object... args) {
+		addFacesMessage(FacesMessage.SEVERITY_INFO,
+				getMessage(FacesContext.getCurrentInstance(), message, args));
+	}
+
+	protected void addWarningMessage(final String message, final Object... args) {
+		addFacesMessage(FacesMessage.SEVERITY_WARN,
+				getMessage(FacesContext.getCurrentInstance(), message, args));
+	}
+
+	protected String getMessage(final Enum<?> e) {
+		return getMessage(FacesContext.getCurrentInstance(), "enum."
+				+ e.getClass().getSimpleName() + "." + e.name());
+	}
+
+	protected String getParam(final String param) {
+		final FacesContext context = FacesContext.getCurrentInstance();
+		final Map<String, String> map = context.getExternalContext()
+				.getRequestParameterMap();
+		return map.get(param);
+	}
+
+	protected Long getParamId(final String param) {
+		return Long.valueOf(getParam(param));
+	}
+
+	protected HttpServletRequest getRequest() {
+		final Object request = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest();
+		return request instanceof HttpServletRequest ? (HttpServletRequest) request
+				: null;
 	}
 
 	protected String redirect(final String urlFromRootContext) {
-		StringBuilder sb = new StringBuilder("/");
+		final StringBuilder sb = new StringBuilder("/");
 		// rootContext
 		sb.append(this.rootContext).append("/");
 		sb.append(urlFromRootContext);
@@ -64,78 +121,7 @@ public abstract class AbstractHome implements Serializable {
 		return "NaviFail";
 	}
 
-	public boolean isAuthenticated() {
-		final String remoteUser = FacesContext.getCurrentInstance()
-				.getExternalContext().getRemoteUser();
-		if (remoteUser != null && StringUtils.isNotBlank(remoteUser)
-				&& !remoteUser.equalsIgnoreCase("anonymous")) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean hasRole(final String roleName) {
-		return getRequest().isUserInRole(roleName);
-	}
-
-	public boolean isAdmin() {
-		return hasRole(RoleName.ADMIN.name());
-	}
-
-	public boolean isCompany() {
-		return hasRole(RoleName.COMPANY.name());
-	}
-
-	public boolean isUser() {
-		return hasRole(RoleName.USER.name());
-	}
-
-	protected void addInfoMessage(final String message, final Object... args) {
-		addMessage(FacesMessage.SEVERITY_INFO, message, args);
-	}
-
-	protected void addWarningMessage(final String message, final Object... args) {
-		addMessage(FacesMessage.SEVERITY_WARN, message, args);
-	}
-
-	protected void addErrorMessage(final String message, Object... args) {
-		addMessage(FacesMessage.SEVERITY_ERROR, message, args);
-	}
-
-	private void addMessage(final Severity severity, final String message,
-			Object... args) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		context.addMessage(null,
-				new FacesMessage(severity, getMessage(context, message, args),
-						null));
-	}
-
-	private String getMessage(final FacesContext facesContext,
-			final String msgKey, final Object... args) {
-		Locale locale = facesContext.getViewRoot().getLocale();
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
-		ResourceBundle bundle = ResourceBundle.getBundle("messages", locale,
-				classLoader);
-		String msgValue = bundle.getString(msgKey);
-		return MessageFormat.format(msgValue, args);
-	}
-
-	protected HttpServletRequest getRequest() {
-		Object request = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-		return request instanceof HttpServletRequest ? (HttpServletRequest) request
-				: null;
-	}
-
-	protected String getParam(final String param) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<String, String> map = context.getExternalContext()
-				.getRequestParameterMap();
-		return map.get(param);
-	}
-
-	protected Long getParamId(final String param) {
-		return Long.valueOf(getParam(param));
+	protected String redirectToRoot() {
+		return redirect("");
 	}
 }

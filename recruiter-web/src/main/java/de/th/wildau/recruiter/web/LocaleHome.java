@@ -24,15 +24,15 @@ public class LocaleHome implements Serializable {
 	private Locale locale = FacesContext.getCurrentInstance().getViewRoot()
 			.getLocale();
 
-	public Locale getLocale() {
-		return this.locale;
-	}
-
 	public String getLanguage() {
 		return this.locale.getLanguage();
 	}
 
-	public void setLanguage(String language) {
+	public Locale getLocale() {
+		return this.locale;
+	}
+
+	public void setLanguage(final String language) {
 		this.locale = new Locale(language);
 		FacesContext.getCurrentInstance().getViewRoot().setLocale(this.locale);
 	}

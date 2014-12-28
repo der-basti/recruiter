@@ -40,6 +40,54 @@ class CrudService {
 	}
 
 	/**
+	 * Delete {@link BaseEntity}.
+	 *
+	 * @param <T>
+	 * @param entity
+	 */
+	protected <T extends BaseEntity<T>> void delete(final T entity) {
+		this.em.remove(entity);
+	}
+
+	/**
+	 * Find all {@link BaseEntity} objects.
+	 *
+	 * @param <T>
+	 * @param clazz
+	 * @return
+	 */
+	protected <T extends BaseEntity<T>> List<T> findAll(final Class<T> clazz) {
+		final CriteriaBuilder builder = this.em.getCriteriaBuilder();
+		final CriteriaQuery<T> query = builder.createQuery(clazz);
+		return this.em.createQuery(query.select(query.from(clazz)))
+				.getResultList();
+	}
+
+	/**
+	 * Find a specific {@link BaseEntity}.
+	 *
+	 * @param <T>
+	 * @param clazz
+	 * @param id
+	 * @return
+	 */
+	protected <T extends BaseEntity<T>> T findById(final Class<T> clazz,
+			final long id) {
+		return this.em.find(clazz, id);
+	}
+
+	/**
+	 * Update (merge) given {@link BaseEntity}.
+	 *
+	 * @param <T>
+	 * @param entity
+	 * @return
+	 */
+	protected <T extends BaseEntity<T>> T merge(final T entity) {
+		return this.em.merge(entity);
+	}
+
+	/**
 	 * Persist the {@link BaseEntity}.
 	 *
 	 * @param <T>
@@ -61,54 +109,6 @@ class CrudService {
 		} else {
 			this.em.persist(entity);
 		}
-	}
-
-	/**
-	 * Find all {@link BaseEntity} objects.
-	 *
-	 * @param <T>
-	 * @param clazz
-	 * @return
-	 */
-	protected <T extends BaseEntity<T>> List<T> findAll(final Class<T> clazz) {
-		CriteriaBuilder builder = this.em.getCriteriaBuilder();
-		CriteriaQuery<T> query = builder.createQuery(clazz);
-		return this.em.createQuery(query.select(query.from(clazz)))
-				.getResultList();
-	}
-
-	/**
-	 * Find a specific {@link BaseEntity}.
-	 *
-	 * @param <T>
-	 * @param clazz
-	 * @param id
-	 * @return
-	 */
-	protected <T extends BaseEntity<T>> T findById(final Class<T> clazz,
-			final long id) {
-		return this.em.find(clazz, id);
-	}
-
-	/**
-	 * Delete {@link BaseEntity}.
-	 *
-	 * @param <T>
-	 * @param entity
-	 */
-	protected <T extends BaseEntity<T>> void delete(final T entity) {
-		this.em.remove(entity);
-	}
-
-	/**
-	 * Update (merge) given {@link BaseEntity}.
-	 *
-	 * @param <T>
-	 * @param entity
-	 * @return
-	 */
-	protected <T extends BaseEntity<T>> T merge(final T entity) {
-		return this.em.merge(entity);
 	}
 
 }

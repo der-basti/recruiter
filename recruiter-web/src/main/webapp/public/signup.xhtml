@@ -10,36 +10,120 @@
 		<h1>Registrieren</h1>
 
 		<h:form id="frmSignin" styleClass="form-horizontal" pt:role="form">
+
+			<!-- account -->
 			<div class="form-group">
 				<h:outputLabel for="email" styleClass="col-sm-2 control-label">E-Mail *</h:outputLabel>
 				<div class="col-sm-10">
-					<h:inputText id="email" value="#{signHome.email}"
-						styleClass="form-control" pt:type="email"
+					<h:inputText id="email" value="#{registerHome.email}"
+						required="true" styleClass="form-control" pt:type="email"
 						pt:placeholder="Enter E-Mail" />
+					<p:message for="email" />
 				</div>
 			</div>
 			<div class="form-group">
 				<h:outputLabel for="password" styleClass="col-sm-2 control-label">Passwort *</h:outputLabel>
 				<div class="col-sm-10">
-					<p:password id="password" value="#{signHome.password}"
+					<p:password id="password" value="#{registerHome.password}"
 						match="passwordConfirm" label="Password"
 						pt:placeholder="Enter password" styleClass="form-control"
 						required="true" />
+					<h:message for="password" />
 				</div>
 			</div>
 			<div class="form-group">
 				<h:outputLabel for="passwordConfirm"
 					styleClass="col-sm-2 control-label">Passwort bestätigen *</h:outputLabel>
 				<div class="col-sm-10">
-					<p:password id="passwordConfirm" value="#{signHome.password}"
+					<p:password id="passwordConfirm" value="#{registerHome.password}"
 						label="Password confirm" pt:placeholder="Confirm password"
 						styleClass="form-control" required="true" />
+					<h:message for="passwordConfirm" />
+				</div>
+			</div>
+
+			<!-- address -->
+			<div class="form-group">
+				<h:outputLabel for="passwordConfirm" value="Kontotyp *"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:selectOneRadio id="selection" value="#{registerHome.role}"
+						required="true">
+						<f:selectItems value="#{registerHome.roleSelectItem}" />
+					</h:selectOneRadio>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<h:outputLabel for="addressTitle"
+					styleClass="col-sm-2 control-label">Titel</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressTitle"
+						value="#{registerHome.address.title}" styleClass="form-control"
+						pt:placeholder="Enter Titel" />
+					<p:message for="addressTitle" />
 				</div>
 			</div>
 			<div class="form-group">
+				<h:outputLabel for="addressName" styleClass="col-sm-2 control-label">Name *</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressName" value="#{registerHome.address.name}"
+						required="true" styleClass="form-control"
+						pt:placeholder="Enter Name" />
+					<p:message for="addressName" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="addressStreet"
+					styleClass="col-sm-2 control-label">Straße *</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressStreet"
+						value="#{registerHome.address.street}" required="true"
+						styleClass="form-control" pt:placeholder="Enter Street" />
+					<p:message for="addressStreet" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="addressStreetNumber"
+					styleClass="col-sm-2 control-label">Hausnummer *</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressStreetNumber"
+						value="#{registerHome.address.streetNumber}" required="true"
+						styleClass="form-control" pt:placeholder="Enter Street Number" />
+					<p:message for="addressStreetNumber" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="addressZipCode"
+					styleClass="col-sm-2 control-label">Postleitzahl *</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressZipCode"
+						value="#{registerHome.address.zipCode}" required="true"
+						styleClass="form-control" pt:placeholder="Enter Zip Code" />
+					<p:message for="addressZipCode" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="addressCity" styleClass="col-sm-2 control-label">Stadt *</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressCity" value="#{registerHome.address.city}"
+						styleClass="form-control" pt:placeholder="Enter City" />
+					<p:message for="addressCity" />
+				</div>
+			</div>
+
+			<!-- captcha -->
+			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<!--h:commandButton id="btnSubmit" action="#{signHome.register}"
-						value="Registrieren" styleClass="btn btn-default" /-->
+					<p:captcha label="Captcha" secure="true" theme="white" language="de" />
+				</div>
+			</div>
+
+			<!-- submit btn -->
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<h:commandButton id="btnSubmit" action="#{registerHome.register}"
+						value="Registrieren" styleClass="btn btn-default" />
 				</div>
 			</div>
 		</h:form>

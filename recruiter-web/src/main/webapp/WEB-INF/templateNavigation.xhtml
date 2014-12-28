@@ -40,10 +40,10 @@
 									class="fa fa-shopping-cart" /> Warenkorb</a></li>
 							<ui:fragment rendered="#{empty request.userPrincipal}">
 								<li><a
-									href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">Registrieren</a></li>
-								<li><a
 									href="#{request.contextPath}/public/signin.jsf?faces-redirect=true"><i
 										class="fa fa-sign-in" /> Anmelden</a></li>
+								<li><a
+									href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">Registrieren</a></li>
 							</ui:fragment>
 							<ui:fragment rendered="#{not empty request.userPrincipal}">
 								<li class="dropdown"><a href="#" class="dropdown-toggle"

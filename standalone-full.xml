@@ -543,7 +543,7 @@
         </outbound-socket-binding>
 <!-- recruiter mail bind start -->
         <outbound-socket-binding name="recruiter-mail-smtp">
-            <remote-destination host="smtp.der-basti.com" port="587"/>
+            <remote-destination host="smtp.th-wildau.de" port="25"/>
         </outbound-socket-binding>
 <!-- recruiter mail bind end -->
     </socket-binding-group>

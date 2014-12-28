@@ -1,6 +1,5 @@
 package de.th.wildau.recruiter.ejb.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,8 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -24,10 +23,10 @@ import de.th.wildau.recruiter.ejb.RoleName;
  *
  * @author s7n
  */
+@Getter
+@Setter
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "role")
-@Data
-@EqualsAndHashCode(callSuper = false)
 public class Role extends BaseEntity<Role> {
 
 	private static final long serialVersionUID = 9187033441602277971L;
@@ -41,14 +40,4 @@ public class Role extends BaseEntity<Role> {
 	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
 	private Set<User> users;
 
-	public Role() {
-		// inizializer
-		this.users = new HashSet<>();
-	}
-
-	public Role(final RoleName name) {
-		this();
-		this.name = name;
-
-	}
 }

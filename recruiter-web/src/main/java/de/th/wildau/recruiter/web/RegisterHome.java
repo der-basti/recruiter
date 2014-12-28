@@ -1,29 +1,90 @@
 package de.th.wildau.recruiter.web;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
-import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
+import javax.inject.Inject;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Named
-@RequestScoped
+import de.th.wildau.recruiter.ejb.BusinessException;
+import de.th.wildau.recruiter.ejb.RoleName;
+import de.th.wildau.recruiter.ejb.model.Address;
+import de.th.wildau.recruiter.ejb.model.Role;
+import de.th.wildau.recruiter.ejb.model.User;
+import de.th.wildau.recruiter.ejb.service.UserService;
+
+@ManagedBean
+// TODO @Named
+@ViewScoped
 public class RegisterHome extends AbstractHome {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(RegisterHome.class);
 
 	private static final long serialVersionUID = 1973236652184354659L;
 
-	private final Logger log = LoggerFactory.getLogger(RegisterHome.class);
+	@Getter
+	@Setter
+	private Address address;
+
+	@Getter
+	@Setter
+	@Email
+	private String email;
+
+	@Getter
+	@Setter
+	private String password;
+
+	@Getter
+	@Setter
+	private RoleName role;
+
+	@Getter
+	private List<SelectItem> roleSelectItem;
+
+	@Getter
+	@Setter
+	private User user;
+
+	@Inject
+	private UserService userService;
 
 	@PostConstruct
 	public void init() {
-		this.log.debug("init");
-		// this.user = new User();
+		log.debug("init");
+		this.user = new User();
+		this.address = new Address();
+		this.user.getRoles().add(this.userService.getRole(RoleName.USER));
+		this.roleSelectItem = new ArrayList<>();
+		for (final Role role : this.userService.getRoles()) {
+			this.roleSelectItem.add(new SelectItem(role.getName(),
+					getMessage(role.getName())));
+		}
 	}
 
 	public String register() {
-		this.log.info("register new user");
+		log.info("register new user");
+		try {
+			this.userService.register(this.email, this.password, this.role,
+					this.user, this.address);
+			log.info("... user created");
+			addInfoMessage("msg.signup.emailSend");
+			return redirectToRoot();
+		} catch (final BusinessException e) {
+			log.error(e.getMessage());
+			addErrorMessage(e);
+		}
 		return "";
 	}
-
 }

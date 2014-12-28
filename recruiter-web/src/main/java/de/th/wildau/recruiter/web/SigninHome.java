@@ -13,15 +13,17 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.th.wildau.recruiter.ejb.BusinessError;
+import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.service.UserService;
 
 @ManagedBean
 @ViewScoped
 public class SigninHome extends AbstractHome {
 
-	private static final long serialVersionUID = 227908819395127476L;
+	private static final Logger log = LoggerFactory.getLogger(SigninHome.class);
 
-	private final Logger log = LoggerFactory.getLogger(SigninHome.class);
+	private static final long serialVersionUID = 227908819395127476L;
 
 	@Getter
 	@Setter
@@ -40,35 +42,30 @@ public class SigninHome extends AbstractHome {
 	 * @return String navigation url
 	 */
 	public String authenticate() {
-		this.log.debug("authenticate user");
+		log.debug("authenticate user");
 		if (!this.may.isAuthenticated()) {
 			try {
-				// FIXME move logic to backing beans
-				// check login attempts
-				if (this.userService.signinAttemptsTooMuch(this.email)) {
-					addErrorMessage("msg.sign.resetPw");
-					return "";
-				}
-				// login call
+				this.userService.authenticatePre(this.email.toLowerCase());
 				getRequest().login(
 						this.email.toLowerCase(),
 						this.password
 								+ this.userService.getPasswordSalt(this.email));
-				// success login > reset attempts
-				this.userService.signinAttemptsReset(this.email);
+				this.userService.authenticatePost(this.email);
 				addInfoMessage("msg.signin.successful");
-				// navigation
-				if (isUser() || isCompany()) {
-					return redirect("my/");
-				} else if (isAdmin()) {
-					return redirect("admin/");
-				}
 			} catch (final ServletException e) {
-				this.log.error(e.getMessage());
+				log.error(e.getMessage());
+				addErrorMessage(new BusinessException(
+						BusinessError.SIGNIN_FAILED));
+			} catch (final BusinessException e) {
+				log.error(e.getMessage());
+				addErrorMessage(e);
 			}
-			// login attempts +1
-			this.userService.signinAttemptsPlus(this.email);
-			addErrorMessage("msg.signin.failed");
+		}
+		// navigation cases
+		if (this.may.isUser() || this.may.isCompany()) {
+			return redirect("my/");
+		} else if (this.may.isAdmin()) {
+			return redirect("admin/");
 		}
 		return "";
 	}
@@ -85,9 +82,9 @@ public class SigninHome extends AbstractHome {
 			try {
 				getRequest().logout();
 			} catch (final ServletException e) {
-				this.log.error(e.getMessage());
+				log.error(e.getMessage());
 			}
-			HttpSession session = (HttpSession) FacesContext
+			final HttpSession session = (HttpSession) FacesContext
 					.getCurrentInstance().getExternalContext()
 					.getSession(false);
 			if (session != null) {

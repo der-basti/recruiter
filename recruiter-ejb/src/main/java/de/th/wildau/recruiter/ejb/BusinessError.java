@@ -1,0 +1,7 @@
+package de.th.wildau.recruiter.ejb;
+
+public enum BusinessError {
+
+	ACCOUNT_COULD_NOT_ACTIVATE, ACCOUNT_NOT_ACTIVE, SIGNIN_FAILED, SIGNIN_RESET_ACTIVATION_KEY, USER_ALREADY_EXIST;
+
+}

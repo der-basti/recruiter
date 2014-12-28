@@ -8,8 +8,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -42,6 +44,7 @@ public class PayCreditCard extends PayAbstract {
 	@Column(length = 31, nullable = false, updatable = false)
 	private String number;
 
+	@Setter(value = AccessLevel.NONE)
 	@NotBlank
 	@Length(min = 3, max = 255)
 	@Column(nullable = false, updatable = false)
@@ -58,5 +61,9 @@ public class PayCreditCard extends PayAbstract {
 	@Pattern(regexp = "[0-9]{4}")
 	@Column(length = 4, nullable = false, updatable = false)
 	private String exYear;
+
+	public final void setName(final String name) {
+		this.name = clean(name);
+	}
 
 }

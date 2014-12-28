@@ -9,5 +9,25 @@
 	<ui:define name="content">
 		<h1>Durchsuchen</h1>
 
+		<h:form id="frmBrowse">
+			<p:dataTable id="dtArticles" value="#{browseHome.articles}"
+				var="item" rowKey="#{item.id}" rows="10" paginator="true"
+				rowsPerPageTemplate="5,10,15,50"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<p:column headerText="Titel" width="35%">
+					#{item.title}
+				</p:column>
+				<p:column headerText="Inhalt">
+					#{browseHome.cutting(item.content)}
+				</p:column>
+				<p:column headerText="" width="50">
+					<p:commandButton icon="ui-icon-search" title="View"
+						action="#{browseHome.navView}">
+						<f:param name="item" value="#{item.id}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
 	</ui:define>
 </ui:composition>
