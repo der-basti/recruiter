@@ -12,18 +12,20 @@
 		<h:form id="frmBrowse">
 			<p:dataTable id="dtArticles" value="#{browseHome.articles}"
 				var="item" rowKey="#{item.id}" rows="10" paginator="true"
-				rowsPerPageTemplate="5,10,15,50"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-				<p:column headerText="Titel" width="35%">
-					#{item.title}
+				rowsPerPageTemplate="5,10,15"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<p:column headerText="Titel">
+					#{browseHome.cutting(item.title)}
 				</p:column>
-				<p:column headerText="Inhalt">
-					#{browseHome.cutting(item.content)}
+				<p:column headerText="Erstellt am" width="200">
+					<h:outputText id="createDate" value="#{item.createDate}">
+						<f:convertDateTime type="both" locale="de" />
+					</h:outputText>
 				</p:column>
-				<p:column headerText="" width="50">
+				<p:column headerText="" width="55">
 					<p:commandButton icon="ui-icon-search" title="View"
-						action="#{browseHome.navView}">
-						<f:param name="item" value="#{item.id}" />
+						action="#{browseHome.show(item.id)}">
+						<f:param name="id" value="#{item.id}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>

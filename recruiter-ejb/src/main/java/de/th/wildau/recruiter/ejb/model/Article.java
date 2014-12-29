@@ -15,9 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -27,49 +25,45 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  * @author s7n
  */
+@Getter
+@Setter
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "article")
-@Data
-@EqualsAndHashCode(callSuper = false)
 public class Article extends BaseEntity<Article> {
 
 	private static final long serialVersionUID = 9221964675991419657L;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	private Purchase purchase;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "article", orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Comment> comments;
 
-	@Setter(AccessLevel.NONE)
-	@Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDate;
-
-	@Setter(value = AccessLevel.NONE)
-	@NotBlank
-	@Size(min = 2, max = 255)
-	@Column(nullable = false)
-	private String title;
-
-	@Setter(value = AccessLevel.NONE)
 	@NotBlank
 	@Size(min = 2, max = 1024)
 	@Column(length = 1024, nullable = false)
 	private String content;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "article", orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Comment> comments;
+	@Column(updatable = false, columnDefinition = "timestamp default current_timestamp")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createDate;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+	private Purchase purchase;
+
+	@NotBlank
+	@Size(min = 2, max = 255)
+	@Column(nullable = false)
+	private String title;
 
 	public Article() {
 		// inizializer
 		this.purchase = new Purchase();
-		this.createDate = new Date();
 		this.comments = new ArrayList<>();
-	}
-
-	public final void setTitle(final String title) {
-		this.title = clean(title);
 	}
 
 	public final void setContent(final String content) {
 		this.content = clean(content);
+	}
+
+	public final void setTitle(final String title) {
+		this.title = clean(title);
 	}
 }

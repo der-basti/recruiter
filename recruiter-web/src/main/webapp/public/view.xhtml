@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsf/composite"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<!--f:metadata>
+		<f:event type="preRenderView" listener="#{viewHome.init}" />
+	</f:metadata-->
+
+	<ui:define name="content">
+		<h1>Anzeige</h1>
+
+		<p class="form-control-static">
+			<h:outputLink value="/#{baseHome.contextRoot}/public/browse.jsf">Zurück</h:outputLink>
+		</p>
+
+		<h:panelGroup rendered="#{viewHome.article eq null}">
+			<p>Diese Anzeige kann nicht angezeigt werden.</p>
+		</h:panelGroup>
+
+		<h:form id="frmView" styleClass="form-horizontal"
+			rendered="#{viewHome.article ne null}">
+			<div class="form-group">
+				<h:outputLabel for="title" value="Titel"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="title" value="#{viewHome.article.title}"
+						styleClass="form-control-static" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="createDate" value="Eingestellt am"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="createDate"
+						value="#{viewHome.article.createDate}"
+						styleClass="form-control-static">
+						<f:convertDateTime type="both" locale="de" />
+					</h:outputText>
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="author" value="Author"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="author" value="TODO Author infos"
+						styleClass="form-control-static" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="content" value="Inhalt"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<h:outputText id="content" value="#{viewHome.article.content}"
+						styleClass="form-control-static" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel value="Kommentare"
+					styleClass="col-sm-2 control-label" />
+				<div class="col-sm-10">
+					<ui:repeat value="#{viewHome.article.comments}" var="item">
+						<blockquote>
+							<div style="font-size: 80%; color: #777">
+								<i class="fa fa-comment" />
+								<h:outputText value=" Anonym" rendered="#{item.user eq null}" />
+								<h:outputText value=" #{item.user.address.name}"
+									rendered="#{item.user ne null}" />
+								-
+								<h:outputText value="#{item.createDate}">
+									<f:convertDateTime type="both" locale="de" />
+								</h:outputText>
+							</div>
+							<p style="font-size: 80%">#{item.content}</p>
+						</blockquote>
+					</ui:repeat>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">Neues Kommentar</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<h:inputTextarea id="newComment" value="#{viewHome.content}"
+						styleClass="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<h:commandButton id="btnSubmit" action="#{viewHome.createComment}"
+						value="Erstellen" styleClass="btn btn-default" />
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

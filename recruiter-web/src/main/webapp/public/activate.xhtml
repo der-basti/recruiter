@@ -15,16 +15,17 @@
 	</f:metadata>
 
 	<ui:define name="content">
-
 		<ui:fragment rendered="#{empty request.userPrincipal}">
-			<p>Jetzt <a
-				href="#{request.contextPath}/public/signin.jsf?faces-redirect=true"><i
-				class="fa fa-sign-in" /> Anmelden</a></p>
+			<p>
+				Jetzt <a
+					href="#{request.contextPath}/public/signin.jsf?faces-redirect=true"><i
+					class="fa fa-sign-in" /> Anmelden</a>
+			</p>
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not empty request.userPrincipal}">
 			<h1>Ihr Konto ist bereits aktiviert</h1>
 		</ui:fragment>
-
 	</ui:define>
+
 </ui:composition>

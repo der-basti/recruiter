@@ -45,6 +45,10 @@ public class BrowseHome extends AbstractHome {
 		return this.articleService.findArticles();
 	}
 
+	public String show(final String value) {
+		return redirect("/public/view.jsf?id=" + value);
+	}
+
 	private String cutting(final String value, final int length) {
 		if (StringUtils.isEmpty(value)) {
 			return value;

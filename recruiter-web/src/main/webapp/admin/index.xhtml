@@ -7,11 +7,9 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 	<ui:define name="content">
-		<h1>admin</h1>
-        #{request.userPrincipal}
-        
-        <p:dataTable id="dtUsers" value="#{dashboardAdmin.users}"
-			var="item">
+		<h1>Übersicht</h1>
+
+		<p:dataTable id="dtUsers" value="#{dashboardAdminHome.users}" var="item">
 			<p:column headerText="email">
         		#{item.email}
         	</p:column>

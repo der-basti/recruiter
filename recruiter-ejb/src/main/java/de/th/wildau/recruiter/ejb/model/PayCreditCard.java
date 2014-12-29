@@ -8,9 +8,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 
 import org.hibernate.validator.constraints.Length;
@@ -25,11 +23,11 @@ import de.th.wildau.recruiter.ejb.PayCreditCardType;
  * @author s7n
  *
  */
+@Getter
+@Setter
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "payCreditCard")
-@Data
-@EqualsAndHashCode(callSuper = false)
-public class PayCreditCard extends PayAbstract {
+public class PayCreditCard extends BaseEntity<PayCreditCard> {
 
 	private static final long serialVersionUID = -2260660952348935786L;
 
@@ -37,18 +35,6 @@ public class PayCreditCard extends PayAbstract {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 31, nullable = false, updatable = false)
 	private PayCreditCardType cardType;
-
-	@NotBlank
-	@Length(min = 1, max = 30)
-	@Pattern(regexp = "[0-9]{13,16}")
-	@Column(length = 31, nullable = false, updatable = false)
-	private String number;
-
-	@Setter(value = AccessLevel.NONE)
-	@NotBlank
-	@Length(min = 3, max = 255)
-	@Column(nullable = false, updatable = false)
-	private String name;
 
 	// exparation
 	@NotEmpty
@@ -61,6 +47,17 @@ public class PayCreditCard extends PayAbstract {
 	@Pattern(regexp = "[0-9]{4}")
 	@Column(length = 4, nullable = false, updatable = false)
 	private String exYear;
+
+	@NotBlank
+	@Length(min = 3, max = 255)
+	@Column(nullable = false, updatable = false)
+	private String name;
+
+	@NotBlank
+	@Length(min = 1, max = 30)
+	@Pattern(regexp = "[0-9]{13,16}", message = "Die Nummer muss 13-16 Zeichen lang sein.")
+	@Column(length = 31, nullable = false, updatable = false)
+	private String number;
 
 	public final void setName(final String name) {
 		this.name = clean(name);

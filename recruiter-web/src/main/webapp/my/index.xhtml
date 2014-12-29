@@ -7,7 +7,25 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 	<ui:define name="content">
-		<h1>my</h1>
-        #{request.userPrincipal}
-    </ui:define>
+		<h1>Übersicht</h1>
+
+		<h:form id="frmBrowse">
+			<p:dataTable id="dtArticles" value="#{dashboardHome.articles}" var="item"
+				rowKey="#{item.id}" rows="10" paginator="true"
+				rowsPerPageTemplate="5,10,15"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<p:column headerText="Titel">
+					#{item.title}
+				</p:column>
+				<p:column headerText="Erstellt am" width="200">
+					<h:outputText id="createDate" value="#{item.createDate}">
+						<f:convertDateTime type="both" locale="de" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="" width="110">
+					TODO edit, delete
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
 </ui:composition>

@@ -10,9 +10,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import de.th.wildau.recruiter.ejb.RoleName;
 
@@ -21,28 +19,23 @@ import de.th.wildau.recruiter.ejb.RoleName;
  *
  * @author s7n
  */
+@Getter
+@Setter
 @Entity
 @Table(name = BaseEntity.DB_PREFIX + "price")
-@Data
-@EqualsAndHashCode(callSuper = false)
 public class Price extends BaseEntity<Price> {
 
 	private static final long serialVersionUID = 4200697069607103301L;
 
-	@Setter(AccessLevel.MODULE)
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	@Column(length = 31, nullable = false, unique = true)
-	private RoleName roleName;
-
-	/**
-	 * Default price is 1. (precision = 10, scale = 2)
-	 */
-	@Setter(AccessLevel.MODULE)
 	@NotNull
 	@Min(0)
 	@Column(nullable = false, columnDefinition = "decimal(10,2) default 1")
 	private BigDecimal price;
+
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(length = 31, nullable = false, unique = true)
+	private RoleName roleName;
 
 	public Price() {
 		// inizializer

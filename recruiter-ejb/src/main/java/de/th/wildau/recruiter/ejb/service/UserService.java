@@ -17,6 +17,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -226,8 +227,7 @@ public class UserService {
 	 *             if no entity found
 	 * @return User or null if user doesn't exist.
 	 */
-	public User getUser(final String email, final String... fetch)
-			throws NoResultException {
+	public User getUser(final String email, final String... fetch) {
 		final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 		final CriteriaQuery<User> cq = cb.createQuery(User.class);
 		final Root<User> r = cq.from(User.class);
@@ -235,7 +235,11 @@ public class UserService {
 			r.fetch(item);
 		}
 		cq.select(r).where(cb.equal(r.get("email"), email.toLowerCase()));
-		return this.em.createQuery(cq).getSingleResult();
+		try {
+			return this.em.createQuery(cq).getSingleResult();
+		} catch (final NoResultException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -270,13 +274,19 @@ public class UserService {
 		if (findUser(user.getEmail()) != null) {
 			throw new BusinessException(BusinessError.USER_ALREADY_EXIST);
 		}
-		this.crud.persist(user);
-		user.getRoles().add(getRole(roleName));
-		this.crud.merge(user);
-		this.mailService.send(
-				"Activate recruter account",
-				getRegMailText(user.getAddress().getName(), user.getEmail(),
-						user.getActivationKey()), user.getEmail());
+		try {
+			this.crud.persist(user);
+			user.getRoles().add(getRole(roleName));
+			this.crud.merge(user);
+			this.mailService.send(
+					"Activate recruter account",
+					getRegMailText(user.getAddress().getName(),
+							user.getEmail(), user.getActivationKey()), user
+							.getEmail());
+		} catch (final ConstraintViolationException e) {
+			this.log.error(e.getMessage());
+			return;
+		}
 	}
 
 	/**
@@ -323,7 +333,7 @@ public class UserService {
 		// > no exit
 
 		// generate key > mail
-		final String key = hashBaseSha(getRandom());
+		// final String key = hashBaseSha(getRandom());
 		// generate token > write paper
 		final int length = 5;
 		final int r = new Random().nextInt(31 - length);

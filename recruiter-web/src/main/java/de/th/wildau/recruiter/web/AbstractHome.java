@@ -1,5 +1,6 @@
 package de.th.wildau.recruiter.web;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -101,14 +102,21 @@ public abstract class AbstractHome implements Serializable {
 		return map.get(param);
 	}
 
-	protected Long getParamId(final String param) {
-		return Long.valueOf(getParam(param));
-	}
-
 	protected HttpServletRequest getRequest() {
 		final Object request = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequest();
 		return request instanceof HttpServletRequest ? (HttpServletRequest) request
 				: null;
+	}
+
+	protected String redirect(final String urlFromRootContext) {
+		try {
+			// redirect
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect("/" + this.contextRoot + urlFromRootContext);
+		} catch (final IOException e) {
+			// log.error(e.getMessage());
+		}
+		return urlFromRootContext;
 	}
 }

@@ -19,7 +19,7 @@ import de.th.wildau.recruiter.ejb.service.UserService;
  */
 @Named
 @ViewScoped
-public class DashboardAdmin extends AbstractHome {
+public class DashboardAdminHome extends AbstractHome {
 
 	private static final long serialVersionUID = 7490377105913699444L;
 

@@ -15,9 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,31 +46,18 @@ public class User extends BaseEntity<User> {
 	@OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Address address;
 
-	@Setter(value = AccessLevel.NONE)
 	@NotEmpty
 	@Email
 	@Size(max = 63)
 	@Column(length = 63, nullable = false, unique = true)
 	private String email;
 
-	/**
-	 * Requirements: minimum 8 chars in total, at least two letters, at least
-	 * two digits or symbols
-	 * 
-	 */
-	@Getter(AccessLevel.NONE)
-	@Setter
 	@NotBlank
 	@Size(min = 6, max = 255)
-	// TODO @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,255})")
+	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_:;,@#$%]).{6,255})", message = "Das Passwort muss mindestens 6 Zeichen lang sein und Sonderzeichen, Ziffern und Buchstaben enthalten")
 	@Column(nullable = false)
 	private String password;
 
-	/**
-	 * Automatically generated.
-	 */
-	// TODO *etter not public
-	@Setter(AccessLevel.PUBLIC)
 	@Column(length = 32, nullable = false, updatable = false)
 	private String passwordSalt;
 

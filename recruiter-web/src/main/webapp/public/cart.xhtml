@@ -7,14 +7,56 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 	<ui:define name="content">
-		<h1>Warenkorb</h1>
+		<h1>Kaufen</h1>
 
 		<ui:fragment rendered="#{empty request.userPrincipal}">
-			<p>Bitte melden Sie sich an, um Eintäge zu kaufen und zu erstellen.</p>
+			<p>Bitte melden Sie sich an, um Eintäge zu kaufen und zu
+				erstellen.</p>
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not empty request.userPrincipal}">
-			<p>TODO</p>
+
+			<h:form id="frmCart" styleClass="form-horizontal" pt:role="form">
+
+				<div class="form-group">
+					<h:outputLabel for="title" value="Titel *"
+						styleClass="col-sm-2 control-label" />
+					<div class="col-sm-10">
+						<h:inputText id="title" value="#{cartHome.article.title}"
+							required="true" styleClass="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="content" value="Inhalt *"
+						styleClass="col-sm-2 control-label" />
+					<div class="col-sm-10">
+						<h:inputTextarea id="content" value="#{cartHome.article.content}"
+							required="true" rows="10" styleClass="form-control" />
+					</div>
+				</div>
+
+				<hr />
+
+				TODO implement pay
+				<!-- <div class="form-group">
+					<h:outputLabel for="payType" value="Bezahlart *"
+						styleClass="col-sm-2 control-label" />
+					<div class="col-sm-10">
+						<h:selectOneRadio id="payType" value="#{cartHome.payType}"
+							required="true">
+							<f:selectItems value="#{cartHome.payTypes}" />
+						</h:selectOneRadio>
+					</div>
+				</div> -->
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<h:commandButton id="btnBuy" action="#{cartHome.buy}"
+							value="Kaufen" styleClass="btn btn-default" />
+					</div>
+				</div>
+			</h:form>
+
 		</ui:fragment>
 	</ui:define>
 </ui:composition>
