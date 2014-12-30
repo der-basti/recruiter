@@ -11,6 +11,10 @@ import javax.inject.Inject;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.th.wildau.recruiter.ejb.PayType;
 import de.th.wildau.recruiter.ejb.model.Article;
 import de.th.wildau.recruiter.ejb.model.Purchase;
@@ -29,6 +33,8 @@ public class CartHome extends AbstractHome {
 	public enum CartState {
 		OPEN, PAY;
 	}
+
+	private static final Logger log = LoggerFactory.getLogger(CartHome.class);
 
 	private static final long serialVersionUID = 4745735016310100432L;
 
@@ -55,7 +61,7 @@ public class CartHome extends AbstractHome {
 			this.articleService.createArticle(this.article.getTitle(),
 					this.article.getContent());
 		} catch (final Exception e) {
-			// XXX log
+			log.error(e.getMessage());
 		}
 		return redirect("/public/browse.jsf");
 	}

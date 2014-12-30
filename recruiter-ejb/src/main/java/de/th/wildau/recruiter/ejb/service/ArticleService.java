@@ -1,6 +1,5 @@
 package de.th.wildau.recruiter.ejb.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,8 +56,7 @@ public class ArticleService {
 		p.setPurchaseDate(new Date());
 		p.setUser(this.crud.getCurrentUser());
 		p.setQuantity(1);
-		// TODO
-		p.setPrice(BigDecimal.valueOf(99));
+		p.setPrice(findMyPrice().getPrice());
 		// article
 		final Article a = new Article();
 		a.setCreateDate(new Date());
@@ -67,7 +65,7 @@ public class ArticleService {
 		p.getArticles().add(a);
 		// pay
 		final PayBankCard payBc = new PayBankCard();
-		// TODO
+		// TODO pay infos & throw businessError
 		payBc.setBic("BYLADEM1001");
 		payBc.setIban("DE89370400440532013666");
 		p.setPayBc(payBc);
@@ -97,9 +95,13 @@ public class ArticleService {
 	}
 
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
-	public void delete() throws BusinessException {
-		isMy(null);
-		// TODO implement
+	public void delete(final Long articleId) throws BusinessException {
+		final Article a = findArticle(articleId);
+		if (a == null) {
+			throw new BusinessException(BusinessError.INVALID_VIEW_ID);
+		}
+		isMy(a.getId());
+		this.crud.delete(a);
 	}
 
 	/**
@@ -118,9 +120,9 @@ public class ArticleService {
 			final CriteriaQuery<Article> cq = cb.createQuery(Article.class);
 			final Root<Article> r = cq.from(Article.class);
 			cq.select(r).where(cb.equal(r.get("id"), id));
-			for (final String item : fetch) {
-				r.fetch(item);
-			}
+			// for (final String item : fetch) {
+			// r.fetch(item);
+			// }
 			final Article res = this.crud.em.createQuery(cq).getSingleResult();
 			// final TypedQuery<Article> q = this.crud.em.createQuery(cq);
 			// final Article res = q.getResultList().get(0);
@@ -174,12 +176,13 @@ public class ArticleService {
 	}
 
 	/**
-	 * Get current prices for all roles from the current user.
+	 * Get current price for all roles from the current user (a user should have
+	 * only one role).
 	 * 
 	 * @return
 	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
-	public List<Price> findMyPrices() {
+	public Price findMyPrice() {
 		final User u = this.userService.getUser(this.crud.getCurrentUserId(),
 				"roles");
 		try {
@@ -190,10 +193,10 @@ public class ArticleService {
 				cq.select(r).where(cb.equal(r.get("roleName"), item.getName()));
 			}
 			final TypedQuery<Price> q = this.crud.em.createQuery(cq);
-			return q.getResultList();
+			return q.getSingleResult();
 		} catch (final NoResultException e) {
 			log.error("can not find my article", e);
-			return new ArrayList<>();
+			return null;
 		}
 	}
 
@@ -219,9 +222,12 @@ public class ArticleService {
 	}
 
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
-	public void update() throws BusinessException {
-		isMy(null);
-		// TODO implement
+	public Article update(final Article article) throws BusinessException {
+		if (article == null) {
+			throw new BusinessException(BusinessError.INVALID_VIEW_ID);
+		}
+		isMy(article.getId());
+		return this.crud.merge(article);
 	}
 
 	private void isMy(final Long articleId) throws BusinessException {

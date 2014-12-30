@@ -24,13 +24,16 @@ public class DashboardHome extends AbstractHome {
 	@Inject
 	private ArticleService articleService;
 
+	/**
+	 * Price for a article. A user should have currently only one role.
+	 */
 	@Getter
-	private List<Price> prices;
+	private Price price;
 
 	@PostConstruct
 	public void init() {
 		this.articles = this.articleService.findMyArticles();
-		this.prices = this.articleService.findMyPrices();
+		this.price = this.articleService.findMyPrice();
 	}
 
 }

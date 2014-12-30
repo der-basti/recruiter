@@ -127,6 +127,11 @@
 		</user-data-constraint>
 	</security-constraint>
 
+	<!-- https://wikis.oracle.com/display/GlassFish/JavaServerFacesRI#JavaServerFacesRI-HowcanIsecureviewstatewhenusingclientsidestatesaving%3F -->
+	<!--env-entry> <env-entry-name>com.sun.faces.ClientStateSavingPassword</env-entry-name> 
+		<env-entry-type>java.lang.String</env-entry-type> <env-entry-value>ENTER_YOUR_PASSWORD</env-entry-value> 
+		</env-entry -->
+
 	<welcome-file-list>
 		<welcome-file>index.jsf</welcome-file>
 	</welcome-file-list>
@@ -143,9 +148,7 @@
 		<error-code>500</error-code>
 		<location>/WEB-INF/error.jsf</location>
 	</error-page>
-	<!--error-page>
-		<exception-type>java.lang.Exception</exception-type>
-		<location>/WEB-INF/error.jsf</location>
-	</error-page-->
+	<!--error-page> <exception-type>java.lang.Exception</exception-type> <location>/WEB-INF/error.jsf</location> 
+		</error-page -->
 
 </web-app>

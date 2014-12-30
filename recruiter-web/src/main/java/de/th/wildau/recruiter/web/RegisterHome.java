@@ -30,7 +30,6 @@ import de.th.wildau.recruiter.ejb.service.UserService;
  *
  */
 @ManagedBean
-// TODO @Named
 @ViewScoped
 public class RegisterHome extends AbstractHome {
 

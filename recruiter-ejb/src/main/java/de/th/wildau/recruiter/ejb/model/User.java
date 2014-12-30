@@ -54,7 +54,8 @@ public class User extends BaseEntity<User> {
 
 	@NotBlank
 	@Size(min = 6, max = 255)
-	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_:;,@#$%]).{6,255})", message = "Das Passwort muss mindestens 6 Zeichen lang sein und Sonderzeichen, Ziffern und Buchstaben enthalten")
+	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z]).{6,255})", message = "Das Passwort muss mindestens 6 Zeichen lang sein und Sonderzeichen, Ziffern und Buchstaben enthalten")
+	// FIXME re - (?=.*[A-Z])(?=.*[-_:;,@#$%])
 	@Column(nullable = false)
 	private String password;
 
