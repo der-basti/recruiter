@@ -3,9 +3,6 @@ package de.th.wildau.recruiter.ejb.service;
 import java.security.Principal;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,22 +10,16 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import de.th.wildau.recruiter.ejb.model.BaseEntity;
-import de.th.wildau.recruiter.ejb.model.User;
 
 /**
  * Create Read Update Delete.
  * 
  * @author s7n
  */
-@Stateless
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
-class CrudService {
+public abstract class Crud {
 
 	@Inject
 	private Principal principal;
-
-	@Inject
-	private UserService userService;
 
 	@PersistenceContext
 	protected EntityManager em;
@@ -86,15 +77,6 @@ class CrudService {
 	}
 
 	/**
-	 * Get current user.
-	 * 
-	 * @return User or {@code null}
-	 */
-	protected User getCurrentUser() {
-		return this.userService.findUser(getCurrentUserId());
-	}
-
-	/**
 	 * Get current user id (email).
 	 * 
 	 * @return String email
@@ -117,9 +99,11 @@ class CrudService {
 	/**
 	 * Persist the {@link BaseEntity}.
 	 *
+	 * @deprecated please use {@link #save(BaseEntity)}
 	 * @param <T>
 	 * @param entity
 	 */
+	@Deprecated
 	protected <T extends BaseEntity<T>> void persist(final T entity) {
 		this.em.persist(entity);
 	}

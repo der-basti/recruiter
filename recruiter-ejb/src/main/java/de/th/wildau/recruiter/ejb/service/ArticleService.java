@@ -24,6 +24,7 @@ import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.model.Article;
 import de.th.wildau.recruiter.ejb.model.Comment;
 import de.th.wildau.recruiter.ejb.model.PayBankCard;
+import de.th.wildau.recruiter.ejb.model.PayCreditCard;
 import de.th.wildau.recruiter.ejb.model.Price;
 import de.th.wildau.recruiter.ejb.model.Purchase;
 import de.th.wildau.recruiter.ejb.model.Role;
@@ -31,13 +32,10 @@ import de.th.wildau.recruiter.ejb.model.User;
 
 @Stateless
 @LocalBean
-public class ArticleService {
+public class ArticleService extends Crud {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(ArticleService.class);
-
-	@Inject
-	private CrudService crud;
 
 	@Inject
 	private UserService userService;
@@ -50,11 +48,13 @@ public class ArticleService {
 	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	@Transactional
-	public void createArticle(final String title, final String content) {
+	public void createArticle(final String title, final String content,
+			final PayBankCard payBc, final PayCreditCard payCc)
+			throws BusinessException {
 		// purchase
 		final Purchase p = new Purchase();
 		p.setPurchaseDate(new Date());
-		p.setUser(this.crud.getCurrentUser());
+		p.setUser(this.userService.getCurrentUser());
 		p.setQuantity(1);
 		p.setPrice(findMyPrice().getPrice());
 		// article
@@ -64,12 +64,23 @@ public class ArticleService {
 		a.setContent(content);
 		p.getArticles().add(a);
 		// pay
-		final PayBankCard payBc = new PayBankCard();
-		// TODO pay infos & throw businessError
-		payBc.setBic("BYLADEM1001");
-		payBc.setIban("DE89370400440532013666");
-		p.setPayBc(payBc);
-		this.crud.persist(p);
+		if (payBc != null) {
+			final PayBankCard bc = new PayBankCard();
+			bc.setBic(payBc.getBic());
+			bc.setIban(payBc.getIban());
+			p.setPayBc(bc);
+		} else if (payCc != null) {
+			final PayCreditCard cc = new PayCreditCard();
+			cc.setCardType(payCc.getCardType());
+			cc.setExMonth(payCc.getExMonth());
+			cc.setExYear(payCc.getExYear());
+			cc.setName(payCc.getName());
+			cc.setNumber(payCc.getNumber());
+			p.setPayCc(cc);
+		} else {
+			throw new BusinessException(BusinessError.INVALID_PAY_INFO);
+		}
+		save(p);
 	}
 
 	/**
@@ -90,8 +101,8 @@ public class ArticleService {
 		comment.setCreateDate(new Date());
 		comment.setArticle(article);
 		comment.setContent(content);
-		comment.setUser(this.crud.getCurrentUser());
-		this.crud.persist(comment);
+		comment.setUser(this.userService.getCurrentUser());
+		save(comment);
 	}
 
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
@@ -101,7 +112,7 @@ public class ArticleService {
 			throw new BusinessException(BusinessError.INVALID_VIEW_ID);
 		}
 		isMy(a.getId());
-		this.crud.delete(a);
+		delete(a);
 	}
 
 	/**
@@ -116,14 +127,14 @@ public class ArticleService {
 			return null;
 		}
 		try {
-			final CriteriaBuilder cb = this.crud.em.getCriteriaBuilder();
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 			final CriteriaQuery<Article> cq = cb.createQuery(Article.class);
 			final Root<Article> r = cq.from(Article.class);
 			cq.select(r).where(cb.equal(r.get("id"), id));
 			// for (final String item : fetch) {
 			// r.fetch(item);
 			// }
-			final Article res = this.crud.em.createQuery(cq).getSingleResult();
+			final Article res = this.em.createQuery(cq).getSingleResult();
 			// final TypedQuery<Article> q = this.crud.em.createQuery(cq);
 			// final Article res = q.getResultList().get(0);
 			// TODO fetch comments.user.address
@@ -149,12 +160,12 @@ public class ArticleService {
 	@PermitAll
 	public List<Article> findArticles() {
 		try {
-			final CriteriaBuilder cb = this.crud.em.getCriteriaBuilder();
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 			final CriteriaQuery<Article> cq = cb.createQuery(Article.class);
 			final Root<Article> r = cq.from(Article.class);
 			cq.select(r).orderBy(cb.asc(r.get("createDate")),
 					cb.asc(r.get("title")));
-			final TypedQuery<Article> q = this.crud.em.createQuery(cq);
+			final TypedQuery<Article> q = this.em.createQuery(cq);
 			return q.getResultList();
 		} catch (final NoResultException e) {
 			log.error("can not find articles", e);
@@ -164,7 +175,7 @@ public class ArticleService {
 
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public List<Article> findMyArticles() {
-		final User user = this.crud.getCurrentUser();
+		final User user = this.userService.getCurrentUser();
 		if (user == null) {
 			return new ArrayList<>();
 		}
@@ -183,16 +194,15 @@ public class ArticleService {
 	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public Price findMyPrice() {
-		final User u = this.userService.getUser(this.crud.getCurrentUserId(),
-				"roles");
+		final User u = this.userService.getUser(getCurrentUserId(), "roles");
 		try {
-			final CriteriaBuilder cb = this.crud.em.getCriteriaBuilder();
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 			final CriteriaQuery<Price> cq = cb.createQuery(Price.class);
 			final Root<Price> r = cq.from(Price.class);
 			for (final Role item : u.getRoles()) {
 				cq.select(r).where(cb.equal(r.get("roleName"), item.getName()));
 			}
-			final TypedQuery<Price> q = this.crud.em.createQuery(cq);
+			final TypedQuery<Price> q = this.em.createQuery(cq);
 			return q.getSingleResult();
 		} catch (final NoResultException e) {
 			log.error("can not find my article", e);
@@ -202,18 +212,18 @@ public class ArticleService {
 
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public List<Purchase> findMyPurchases() {
-		final User user = this.crud.getCurrentUser();
+		final User user = this.userService.getCurrentUser();
 		if (user == null) {
 			return new ArrayList<>();
 		}
 		try {
-			final CriteriaBuilder cb = this.crud.em.getCriteriaBuilder();
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 			final CriteriaQuery<Purchase> cq = cb.createQuery(Purchase.class);
 			final Root<Purchase> r = cq.from(Purchase.class);
 			r.fetch("user");
 			r.fetch("articles");
 			cq.select(r).where(cb.equal(r.get("user"), user));
-			final TypedQuery<Purchase> q = this.crud.em.createQuery(cq);
+			final TypedQuery<Purchase> q = this.em.createQuery(cq);
 			return q.getResultList();
 		} catch (final NoResultException e) {
 			log.error("can not find my article", e);
@@ -227,12 +237,12 @@ public class ArticleService {
 			throw new BusinessException(BusinessError.INVALID_VIEW_ID);
 		}
 		isMy(article.getId());
-		return this.crud.merge(article);
+		return merge(article);
 	}
 
 	private void isMy(final Long articleId) throws BusinessException {
 		final Article article = findArticle(articleId, "purchase.user");
-		if (article.getPurchase().getUser().getId() != this.crud
+		if (article.getPurchase().getUser().getId() != this.userService
 				.getCurrentUser().getId()) {
 			throw new BusinessException(BusinessError.THIS_IS_NOT_YOURS);
 		}

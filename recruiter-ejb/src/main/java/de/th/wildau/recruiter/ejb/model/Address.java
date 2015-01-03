@@ -54,7 +54,7 @@ public class Address extends BaseEntity<Address> {
 
 	@NotBlank
 	@Size(min = 2, max = 11)
-	@Pattern(regexp = "^([0-9]{5})*")
+	@Pattern(regexp = "^([0-9]{5,11})")
 	@Column(length = 11, nullable = false)
 	private String zipCode;
 

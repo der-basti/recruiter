@@ -3,10 +3,10 @@ package de.th.wildau.recruiter.web;
 import java.io.Serializable;
 import java.util.Locale;
 
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 /**
  * Handle the user locale.
@@ -14,7 +14,7 @@ import javax.faces.context.FacesContext;
  * @author s7n
  *
  */
-@ManagedBean
+@Named
 @SessionScoped
 public class LocaleHome implements Serializable {
 

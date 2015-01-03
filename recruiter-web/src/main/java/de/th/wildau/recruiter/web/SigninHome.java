@@ -1,9 +1,9 @@
 package de.th.wildau.recruiter.web;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
@@ -23,7 +23,7 @@ import de.th.wildau.recruiter.ejb.service.UserService;
  * @author s7n
  *
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class SigninHome extends AbstractHome {
 
@@ -52,10 +52,11 @@ public class SigninHome extends AbstractHome {
 		if (!this.may.isAuthenticated()) {
 			try {
 				this.userService.authenticatePre(this.email.toLowerCase());
-				getRequest().login(
-						this.email.toLowerCase(),
-						this.password
-								+ this.userService.getPasswordSalt(this.email));
+				final String salt = this.userService
+						.getPasswordSalt(this.email);
+				// https://stackoverflow.com/questions/24758938/wildfly-digest-login-config-with-database-login-module
+				getRequest().login(this.email.toLowerCase(),
+						this.password + salt);
 				this.userService.authenticatePost(this.email);
 				addInfoMessage("msg.signin.successful");
 			} catch (final ServletException e) {

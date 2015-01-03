@@ -15,7 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -53,9 +52,10 @@ public class User extends BaseEntity<User> {
 	private String email;
 
 	@NotBlank
-	@Size(min = 6, max = 255)
-	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z]).{6,255})", message = "Das Passwort muss mindestens 6 Zeichen lang sein und Sonderzeichen, Ziffern und Buchstaben enthalten")
-	// FIXME re - (?=.*[A-Z])(?=.*[-_:;,@#$%])
+	// FIXME @Size(min = 8, max = 255)
+	// FIXME @Pattern(regexp =
+	// "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_:;,@#$%]).{8,20})", message =
+	// "Das Passwort muss mindestens 8 Zeichen lang sein und Sonderzeichen, Ziffern und Buchstaben enthalten.")
 	@Column(nullable = false)
 	private String password;
 

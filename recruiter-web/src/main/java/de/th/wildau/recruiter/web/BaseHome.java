@@ -1,7 +1,7 @@
 package de.th.wildau.recruiter.web;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.Facelet;
 import javax.inject.Named;
@@ -44,4 +44,5 @@ public class BaseHome extends AbstractHome {
 		this.jsfImplLocation = Facelet.class.getProtectionDomain()
 				.getCodeSource().toString();
 	}
+
 }

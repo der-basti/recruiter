@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import de.th.wildau.recruiter.ejb.PayType;
 import de.th.wildau.recruiter.ejb.model.Article;
+import de.th.wildau.recruiter.ejb.model.PayBankCard;
 import de.th.wildau.recruiter.ejb.model.Purchase;
 import de.th.wildau.recruiter.ejb.service.ArticleService;
 
@@ -26,7 +27,7 @@ import de.th.wildau.recruiter.ejb.service.ArticleService;
  * @author s7n
  *
  */
-@ManagedBean
+@Named
 @SessionScoped
 public class CartHome extends AbstractHome {
 
@@ -58,8 +59,11 @@ public class CartHome extends AbstractHome {
 
 	public String buy() {
 		try {
+			final PayBankCard bc = new PayBankCard();
+			bc.setBic("BYLADEM1002");
+			bc.setIban("DE821008000009600309576");
 			this.articleService.createArticle(this.article.getTitle(),
-					this.article.getContent());
+					this.article.getContent(), bc, null);
 		} catch (final Exception e) {
 			log.error(e.getMessage());
 		}

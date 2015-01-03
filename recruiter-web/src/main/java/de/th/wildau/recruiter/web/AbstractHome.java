@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.model.Role;
@@ -36,6 +40,7 @@ public abstract class AbstractHome implements Serializable {
 
 	@Getter
 	private final String contextRoot = "recruiter";
+
 	// ((HttpServletRequest)
 	// FacesContext.getCurrentInstance().getExternalContext().getRequest()).getContextPath()
 
@@ -51,6 +56,19 @@ public abstract class AbstractHome implements Serializable {
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Unescape html string.
+	 * 
+	 * @param value
+	 * @return String unescape
+	 */
+	public String unescape(final String value) {
+		if (StringUtils.isEmpty(value)) {
+			return null;
+		}
+		return StringEscapeUtils.unescapeHtml4(value);
 	}
 
 	private void addFacesMessage(final Severity severity, final String message) {

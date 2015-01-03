@@ -2,7 +2,7 @@ package de.th.wildau.recruiter.web;
 
 import java.io.Serializable;
 
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;

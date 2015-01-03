@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +29,7 @@ import de.th.wildau.recruiter.ejb.service.UserService;
  * @author s7n
  *
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class RegisterHome extends AbstractHome {
 
@@ -70,7 +70,7 @@ public class RegisterHome extends AbstractHome {
 		log.debug("init");
 		this.user = new User();
 		this.address = new Address();
-		this.user.getRoles().add(this.userService.getRole(RoleName.USER));
+		this.role = RoleName.USER;
 		this.roleSelectItem = new ArrayList<>();
 		for (final Role role : this.userService.getRoles()) {
 			this.roleSelectItem.add(new SelectItem(role.getName(),
@@ -81,6 +81,7 @@ public class RegisterHome extends AbstractHome {
 	public String register() {
 		log.info("register new user");
 		try {
+			this.user.getRoles().add(this.userService.getRole(this.role));
 			this.userService.register(this.email, this.password, this.role,
 					this.user, this.address);
 			log.info("... user created");

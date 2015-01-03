@@ -99,7 +99,9 @@
 				<div class="col-sm-10">
 					<h:inputText id="addressZipCode"
 						value="#{registerHome.address.zipCode}" required="true"
-						styleClass="form-control" pt:placeholder="Enter Zip Code" />
+						styleClass="form-control" pt:placeholder="Enter Zip Code">
+						<f:validateLength minimum="5" maximum="11" />
+					</h:inputText>
 					<p:message for="addressZipCode" />
 				</div>
 			</div>
@@ -109,6 +111,18 @@
 					<h:inputText id="addressCity" value="#{registerHome.address.city}"
 						styleClass="form-control" pt:placeholder="Enter City" />
 					<p:message for="addressCity" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel for="addressPhone"
+					styleClass="col-sm-2 control-label">Telefon</h:outputLabel>
+				<div class="col-sm-10">
+					<h:inputText id="addressPhone"
+						value="#{registerHome.address.phone}" styleClass="form-control"
+						pt:placeholder="Enter Phone">
+						<f:validateLength maximum="31" />
+					</h:inputText>
+					<p:message for="addressPhone" />
 				</div>
 			</div>
 

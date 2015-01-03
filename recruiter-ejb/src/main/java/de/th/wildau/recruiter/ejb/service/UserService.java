@@ -1,5 +1,7 @@
 package de.th.wildau.recruiter.ejb.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Random;
@@ -17,6 +19,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -37,7 +40,7 @@ import de.th.wildau.recruiter.ejb.model.User;
 @Stateless
 @LocalBean
 @PermitAll
-public class UserService {
+public class UserService extends Crud {
 
 	/**
 	 * Generate the registration/activation mail.
@@ -64,8 +67,8 @@ public class UserService {
 		return sb.toString();
 	}
 
-	@Inject
-	private CrudService crud;
+	// @Inject
+	// private Crud crud;
 
 	private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -131,7 +134,7 @@ public class UserService {
 			if (u.getSigninAttempts() > 10) {
 				// reset activation key
 				u.setActivationKey(hashSha(u.getEmail() + getRandom()));
-				this.crud.merge(u);
+				merge(u);
 				this.mailService.send(
 						"Reset activation key",
 						getRegMailText(u.getAddress().getName(), u.getEmail(),
@@ -143,7 +146,7 @@ public class UserService {
 			// signin attempts +1
 			final Integer newCount = u.getSigninAttempts() + 1;
 			u.setSigninAttempts(newCount);
-			this.crud.merge(u);
+			merge(u);
 		}
 	}
 
@@ -170,6 +173,15 @@ public class UserService {
 	}
 
 	/**
+	 * Get current user.
+	 * 
+	 * @return User or {@code null}
+	 */
+	public User getCurrentUser() {
+		return findUser(getCurrentUserId());
+	}
+
+	/**
 	 * Find salt for a specific user.
 	 * 
 	 * @param email
@@ -177,12 +189,12 @@ public class UserService {
 	 */
 	public String getPasswordSalt(final String email) {
 		try {
-			final CriteriaBuilder cb = this.crud.em.getCriteriaBuilder();
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
 			final CriteriaQuery<User> cq = cb.createQuery(User.class);
 			final Root<User> r = cq.from(User.class);
 			cq.select(r);
 			cq.where(cb.equal(r.get("email"), email.toLowerCase()));
-			final TypedQuery<User> q = this.crud.em.createQuery(cq);
+			final TypedQuery<User> q = this.em.createQuery(cq);
 			return q.getSingleResult().getPasswordSalt();
 		} catch (final NoResultException e) {
 			this.log.error("can not find password salt for email " + email);
@@ -261,6 +273,7 @@ public class UserService {
 	/**
 	 * Register a new user.
 	 */
+	@Transactional
 	public void register(final String email, final String password,
 			final RoleName roleName, final User user, final Address address)
 			throws BusinessException {
@@ -268,16 +281,14 @@ public class UserService {
 		user.setEmail(email);
 		user.setAddress(address);
 		user.setPasswordSalt(getRandom());
-		user.setPassword(hashBaseSha(password + user.getPasswordSalt()));
+		user.setPassword(hashPassword(password + user.getPasswordSalt()));
 		user.setActivationKey(hashSha(user.getEmail() + getRandom()));
 
 		if (findUser(user.getEmail()) != null) {
 			throw new BusinessException(BusinessError.USER_ALREADY_EXIST);
 		}
 		try {
-			this.crud.persist(user);
-			user.getRoles().add(getRole(roleName));
-			this.crud.merge(user);
+			save(user);
 			this.mailService.send(
 					"Activate recruter account",
 					getRegMailText(user.getAddress().getName(),
@@ -349,10 +360,23 @@ public class UserService {
 		return RandomStringUtils.randomAlphanumeric(32);
 	}
 
+	@Deprecated
 	private String hashBaseSha(final String value) {
 		return Base64.getEncoder().encodeToString(hashSha(value).getBytes());
 	}
 
+	private String hashPassword(final String value) {
+		try {
+			final byte[] hash = MessageDigest.getInstance("SHA-256").digest(
+					value.getBytes());
+			return Base64.getEncoder().encodeToString(hash);
+		} catch (final NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	@Deprecated
 	private String hashSha(final String value) {
 		return Hashing.sha256().hashString(value, Charsets.UTF_8).toString();
 	}
@@ -366,7 +390,7 @@ public class UserService {
 		final User u = getUser(email.toLowerCase());
 		if (u != null) {
 			u.setSigninAttempts(0);
-			this.crud.merge(u);
+			merge(u);
 		}
 	}
 }

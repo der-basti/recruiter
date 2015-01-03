@@ -7,7 +7,7 @@ import org.jsoup.safety.Whitelist;
 
 public class StringCleanTest {
 
-	private static final String dirty = "0x0041 &#208; \u672c 日本語 - pre<script type=\"text/javascript\">alert('test');</script>"
+	private static final String dirty = "\u672c &#208; 日本語 - pre<script type=\"text/javascript\">alert('test');</script>"
 			+ "John is awesome. <script type=\"text/javascript\"> alert('test');</script>"
 			+ "<script type=\"text/javascript\">alert('test');</script> X=Y, Y=\"ZZ\" <b>bold</strong> post";
 
@@ -25,6 +25,9 @@ public class StringCleanTest {
 		System.out.println("##########################");
 
 		// System.out.println(Hex.decodeHex(dirty.toCharArray()));
+
+		System.out.println(StringEscapeUtils
+				.unescapeHtml4(("\u00D0 \u672C \u65E5\u672C\u8A9E")));
 	}
 
 	@SuppressWarnings("unused")

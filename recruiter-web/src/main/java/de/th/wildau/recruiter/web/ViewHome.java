@@ -1,9 +1,9 @@
 package de.th.wildau.recruiter.web;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import de.th.wildau.recruiter.ejb.service.ArticleService;
  * @author s7n
  *
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class ViewHome extends AbstractHome {
 

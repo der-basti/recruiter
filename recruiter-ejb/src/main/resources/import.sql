@@ -15,7 +15,7 @@ insert into was_user (email, password, passwordSalt, address_id) values ('a@a.a'
 insert into was_user_role (user_id, role_id) values ((select id from was_user where email = 'a@a.a'), (select id from was_role where name = 'ADMIN'))
 
 -- user: u@u.u
-insert into was_address (name, street, streetNumber, zipCode, city) values ('Homer Simpson', 'Street', '1', '12345', 'Springfield')
+insert into was_address (name, street, streetNumber, zipCode, city, phone) values ('Homer Simpson', 'Street', '1', '12345', 'Springfield', '030 55555')
 insert into was_user (email, password, passwordSalt, address_id) values ('u@u.u', 'fsbv1UooTJ3hPChjo5HgY9T5caG6TG4xY7Qb10k2T8E=', '7MkZdGswgzvk1cDocG4v', (select id from was_address where city like 'Springfield'))
 insert into was_user_role (user_id, role_id) values ((select id from was_user where email = 'u@u.u'), (select id from was_role where name = 'USER'))
 
@@ -27,8 +27,8 @@ insert into was_comment (article_id, content) values ((select id from was_articl
 
 insert into was_payBankCard (bic, iban) values ('BYLADEM1001', 'DE31200800000960030900')
 insert into was_purchase (quantity, payBc_id, user_id) values (1, (select id from was_payBankCard where iban = 'DE31200800000960030900'), (select id from was_user where email = 'u@u.u'))
-insert into was_article (purchase_id, title, content) values (2, 'attack', '&lt;p&gt;-&lt;/p&gt; <script type="text/javascript">alert("attack");</script> <br/> &#208; \u672c 本')
-insert into was_comment (article_id, content) values ((select id from was_article where title = 'attack'), 'comment attack <script type="text/javascript">alert("comment");</script>')
+insert into was_article (purchase_id, title, content) values (2, 'attack', 'should not possible from DB: &lt;p&gt;-&lt;/p&gt; <script type="text/javascript">alert("attack");</script> <br/> &#208; \u672c 本')
+insert into was_comment (article_id, content) values ((select id from was_article where title = 'attack'), 'comment attack - should not possible from DB: <script type="text/javascript">alert("comment");</script>')
 
 insert into was_payBankCard (bic, iban) values ('BYLADEM1001', 'DE89370400440532013000')
 insert into was_purchase (quantity, payBc_id, user_id) values (1, (select id from was_payBankCard where iban = 'DE89370400440532013000'), (select id from was_user where email = 'u@u.u'))
