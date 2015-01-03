@@ -38,7 +38,7 @@ public class PayCreditCard extends BaseEntity<PayCreditCard> {
 
 	// exparation
 	@NotEmpty
-	@Pattern(regexp = "[0-9]{2}")
+	@Pattern(regexp = "[0-9]{1,2}")
 	@Column(length = 2, nullable = false, updatable = false)
 	private String exMonth;
 
@@ -58,6 +58,12 @@ public class PayCreditCard extends BaseEntity<PayCreditCard> {
 	@Pattern(regexp = "[0-9]{13,16}", message = "Die Nummer muss 13-16 Zeichen lang sein.")
 	@Column(length = 31, nullable = false, updatable = false)
 	private String number;
+
+	@NotBlank
+	@Length(min = 3, max = 4)
+	@Pattern(regexp = "[0-9]{3,4}", message = "Die Nummer muss 3-4 Zeichen lang sein.")
+	@Column(length = 4, nullable = false, updatable = false)
+	private String numberCheck;
 
 	public final void setName(final String name) {
 		this.name = clean(name);

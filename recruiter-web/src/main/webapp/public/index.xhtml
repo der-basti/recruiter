@@ -8,5 +8,22 @@
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 	<ui:define name="content">
 		<h1>Herzlich Willkommen</h1>
+		<p>Die Webanwendung weist folgende Haupt-Funktionalitäten auf:
+		<ul>
+			<li>Ein Nutzer kann sich nur ins System einloggen, wenn er ein
+				Profil angelegt hat.</li>
+			<li>Ein authentifizierter Nutzer kann entsprechend des
+				spezifischen Themas (Personalvermittlung) Leistungen
+				(Stellenanzeigen und Vorstellung der eigenen Person) in Anspruch
+				nehmen. Er kann in derselben Session eine Leistung auch mehrmals in
+				Anspruch nehmen.</li>
+			<li>Der Nutzer kann die angeforderten Leistungen erst beziehen,
+				wenn er sie an der Kasse bezahlt hat. Dafür stehen ihm die beiden
+				Möglichkeiten "Zahlung per Kreditkarte" und "Zahlung per
+				Kontoüberweisung" zur Verfügung.</li>
+			<li>Der Nutzer hat die Möglichkeit, Kommentare mit bis zu 250
+				Zeichen abzugeben. Die Kommentare sollen öffentlich lesbar sein.</li>
+		</ul>
+		</p>
 	</ui:define>
 </ui:composition>

@@ -36,7 +36,7 @@ public class Comment extends BaseEntity<Comment> {
 	private Article article;
 
 	@NotEmpty
-	@Size(min = 1, max = 255)
+	@Size(min = 1, max = 250)
 	@Column(nullable = false)
 	private String content;
 

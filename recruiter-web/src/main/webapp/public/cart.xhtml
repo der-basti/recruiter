@@ -12,6 +12,10 @@
 		<ui:fragment rendered="#{empty request.userPrincipal}">
 			<p>Bitte melden Sie sich an, um Eintäge zu kaufen und zu
 				erstellen.</p>
+			<p>
+				Artikel für Benutzer kosten 1€ pro Stück.<br /> Inserate für
+				Unternehmen kosten 5€ pro Stück.
+			</p>
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not empty request.userPrincipal}">
@@ -23,10 +27,11 @@
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
 						<h:inputText id="title" value="#{cartHome.article.title}"
-							required="true" styleClass="form-control">
+							styleClass="form-control">
 							<f:validateLength minimum="1" maximum="255" />
 							<!-- <f:validateBean /> -->
 						</h:inputText>
+						<p:message for="title" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -34,26 +39,112 @@
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
 						<h:inputTextarea id="content" value="#{cartHome.article.content}"
-							required="true" rows="10" styleClass="form-control">
+							rows="10" styleClass="form-control">
 							<f:validateLength minimum="1" maximum="1024" />
-							<!-- <f:validateBean /> -->
 						</h:inputTextarea>
+						<p:message for="content" />
 					</div>
 				</div>
 
 				<hr />
 
-				TODO implement pay
-				<!-- <div class="form-group">
+				<div class="form-group">
 					<h:outputLabel for="payType" value="Bezahlart *"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:selectOneRadio id="payType" value="#{cartHome.payType}"
-							required="true">
+						<p:selectOneRadio id="payType" value="#{cartHome.payType}"
+							layout="grid" columns="1">
 							<f:selectItems value="#{cartHome.payTypes}" />
-						</h:selectOneRadio>
+							<f:ajax event="change" render="@form" />
+						</p:selectOneRadio>
+						<p:message for="payType" />
 					</div>
-				</div> -->
+				</div>
+
+				<div id="pay" class="form-group">
+
+					<!-- BC -->
+					<ui:fragment rendered="#{cartHome.showBc()}">
+						<div class="form-group">
+							<h:outputLabel for="payBcBIC" value="BIC *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<h:inputText id="payBcBIC" value="#{cartHome.payBc.bic}"
+									styleClass="form-control" />
+								<p:message for="payBcBIC" />
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel for="payBcIBAN" value="IBAN *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<h:inputText id="payBcIBAN" value="#{cartHome.payBc.iban}"
+									styleClass="form-control" />
+								<p:message for="payBcIBAN" />
+							</div>
+						</div>
+					</ui:fragment>
+
+					<!-- CC -->
+					<ui:fragment rendered="#{cartHome.showBc() eq false}">
+						<div class="form-group">
+							<h:outputLabel for="payCcType" value="Kreditkarte *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<p:selectOneRadio id="payCcType" value="#{cartHome.ccType}"
+									layout="grid" columns="1">
+									<f:selectItems value="#{cartHome.ccTypes}" />
+								</p:selectOneRadio>
+								<p:message for="payCcType" />
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel for="payCcExMonth" value="Ablaufdatum *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<h:selectOneMenu id="payCcExMonth"
+									value="#{cartHome.payCc.exMonth}">
+									<f:selectItems value="#{cartHome.exMonths}" />
+								</h:selectOneMenu>
+								<h:selectOneMenu id="payCcExYear"
+									value="#{cartHome.payCc.exYear}">
+									<f:selectItems value="#{cartHome.exYears}" />
+								</h:selectOneMenu>
+								<p:message for="payCcExMonth" />
+								<p:message for="payCcExYear" />
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel for="payCcName" value="Name *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<h:inputText id="payCcName" value="#{cartHome.payCc.name}"
+									styleClass="form-control" />
+								<p:message for="payCcName" />
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel for="payCcNumber" value="Nummer *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<h:inputText id="payCcNumber" value="#{cartHome.payCc.number}"
+									styleClass="form-control" />
+								<p:message for="payCcNumber" />
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel for="payCcNumberCheck" value="Kontrollnummer *"
+								styleClass="col-sm-2 control-label" />
+							<div class="col-sm-10">
+								<h:inputText id="payCcNumberCheck"
+									value="#{cartHome.payCc.numberCheck}"
+									styleClass="form-control" />
+								<p:message for="payCcNumberCheck" />
+							</div>
+						</div>
+					</ui:fragment>
+
+				</div>
 
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">

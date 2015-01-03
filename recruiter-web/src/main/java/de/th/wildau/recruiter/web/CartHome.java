@@ -1,6 +1,7 @@
 package de.th.wildau.recruiter.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,9 +16,13 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.th.wildau.recruiter.ejb.BusinessError;
+import de.th.wildau.recruiter.ejb.BusinessException;
+import de.th.wildau.recruiter.ejb.PayCreditCardType;
 import de.th.wildau.recruiter.ejb.PayType;
 import de.th.wildau.recruiter.ejb.model.Article;
 import de.th.wildau.recruiter.ejb.model.PayBankCard;
+import de.th.wildau.recruiter.ejb.model.PayCreditCard;
 import de.th.wildau.recruiter.ejb.model.Purchase;
 import de.th.wildau.recruiter.ejb.service.ArticleService;
 
@@ -48,6 +53,30 @@ public class CartHome extends AbstractHome {
 
 	@Getter
 	@Setter
+	private PayCreditCardType ccType;
+
+	@Getter
+	@Setter
+	private List<SelectItem> ccTypes;
+
+	@Getter
+	@Setter
+	private List<SelectItem> exMonths;
+
+	@Getter
+	@Setter
+	private List<SelectItem> exYears;
+
+	@Getter
+	@Setter
+	private PayBankCard payBc;
+
+	@Getter
+	@Setter
+	private PayCreditCard payCc;
+
+	@Getter
+	@Setter
 	private PayType payType;
 
 	@Getter
@@ -59,31 +88,77 @@ public class CartHome extends AbstractHome {
 
 	public String buy() {
 		try {
-			final PayBankCard bc = new PayBankCard();
-			bc.setBic("BYLADEM1002");
-			bc.setIban("DE821008000009600309576");
+			PayBankCard bc = null;
+			PayCreditCard cc = null;
+			switch (this.payType) {
+			case BC:
+				bc = this.payBc;
+				break;
+			case CC:
+				cc = this.payCc;
+				break;
+			default:
+				addErrorMessage(new BusinessException(
+						BusinessError.INVALID_PAY_INFO));
+				return "";
+			}
 			this.articleService.createArticle(this.article.getTitle(),
-					this.article.getContent(), bc, null);
+					this.article.getContent(), bc, cc);
+			return redirect("/my/index.jsf");
+		} catch (final BusinessException e) {
+			addErrorMessage(e);
 		} catch (final Exception e) {
 			log.error(e.getMessage());
 		}
-		return redirect("/public/browse.jsf");
+		return "";
 	}
 
 	@PostConstruct
 	public void init() {
 		this.article = new Article();
+		this.payBc = new PayBankCard();
+		this.payCc = new PayCreditCard();
+		this.payCc.setExMonth(String.valueOf(getCurrentMonth()));
+		this.payCc.setExYear(String.valueOf(getCurrentYear()));
+		this.payType = PayType.BC;
 		this.payTypes = new ArrayList<>();
 		for (final PayType item : PayType.values()) {
 			this.payTypes.add(new SelectItem(item, getMessage(item)));
 		}
 
+		this.ccTypes = new ArrayList<>();
+		for (final PayCreditCardType item : PayCreditCardType.values()) {
+			this.ccTypes.add(new SelectItem(item, getMessage(item)));
+		}
+		this.exMonths = new ArrayList<SelectItem>();
+		for (int i = 1; i <= 12; i++) {
+			this.exMonths.add(new SelectItem(i, String.valueOf(i)));
+		}
+		this.exYears = new ArrayList<SelectItem>();
+		for (int i = getCurrentYear(); i <= getCurrentYear() + 10; i++) {
+			this.exYears.add(new SelectItem(i, String.valueOf(i)));
+		}
 		this.purchases = new ArrayList<>();
-
 	}
 
 	public void reset() {
 		this.article = new Article();
 		this.payType = null;
+	}
+
+	public boolean showBc() {
+		return this.payType == PayType.BC;
+	}
+
+	private int getCurrentDate(final int calendarId) {
+		return Calendar.getInstance().get(Calendar.YEAR);
+	}
+
+	private int getCurrentMonth() {
+		return getCurrentDate(Calendar.MONTH);
+	}
+
+	private int getCurrentYear() {
+		return getCurrentDate(Calendar.YEAR);
 	}
 }

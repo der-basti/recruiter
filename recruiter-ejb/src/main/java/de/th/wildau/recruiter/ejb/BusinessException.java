@@ -16,7 +16,7 @@ public class BusinessException extends Exception {
 	private static final long serialVersionUID = 218234576192691666L;
 
 	@Getter
-	private Collection<BusinessError> errors;
+	private final Collection<BusinessError> errors;
 
 	public BusinessException(final BusinessError... errorCodes) {
 		super();

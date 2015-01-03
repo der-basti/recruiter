@@ -16,7 +16,7 @@
 				<h:outputLabel for="email" styleClass="col-sm-2 control-label">E-Mail *</h:outputLabel>
 				<div class="col-sm-10">
 					<h:inputText id="email" value="#{registerHome.email}"
-						required="true" styleClass="form-control" pt:type="email"
+						styleClass="form-control" pt:type="email"
 						pt:placeholder="Enter E-Mail" />
 					<p:message for="email" />
 				</div>
@@ -44,13 +44,14 @@
 
 			<!-- address -->
 			<div class="form-group">
-				<h:outputLabel for="passwordConfirm" value="Kontotyp *"
+				<h:outputLabel for="selection" value="Kontotyp *"
 					styleClass="col-sm-2 control-label" />
 				<div class="col-sm-10">
-					<h:selectOneRadio id="selection" value="#{registerHome.role}"
-						required="true">
+					<p:selectOneRadio id="selection" value="#{registerHome.role}"
+						layout="grid" columns="1">
 						<f:selectItems value="#{registerHome.roleSelectItem}" />
-					</h:selectOneRadio>
+					</p:selectOneRadio>
+					<p:message for="selection" />
 				</div>
 			</div>
 
@@ -68,8 +69,7 @@
 				<h:outputLabel for="addressName" styleClass="col-sm-2 control-label">Name *</h:outputLabel>
 				<div class="col-sm-10">
 					<h:inputText id="addressName" value="#{registerHome.address.name}"
-						required="true" styleClass="form-control"
-						pt:placeholder="Enter Name" />
+						styleClass="form-control" pt:placeholder="Enter Name" />
 					<p:message for="addressName" />
 				</div>
 			</div>
@@ -78,8 +78,8 @@
 					styleClass="col-sm-2 control-label">Straße *</h:outputLabel>
 				<div class="col-sm-10">
 					<h:inputText id="addressStreet"
-						value="#{registerHome.address.street}" required="true"
-						styleClass="form-control" pt:placeholder="Enter Street" />
+						value="#{registerHome.address.street}" styleClass="form-control"
+						pt:placeholder="Enter Street" />
 					<p:message for="addressStreet" />
 				</div>
 			</div>
@@ -88,7 +88,7 @@
 					styleClass="col-sm-2 control-label">Hausnummer *</h:outputLabel>
 				<div class="col-sm-10">
 					<h:inputText id="addressStreetNumber"
-						value="#{registerHome.address.streetNumber}" required="true"
+						value="#{registerHome.address.streetNumber}"
 						styleClass="form-control" pt:placeholder="Enter Street Number" />
 					<p:message for="addressStreetNumber" />
 				</div>
@@ -98,8 +98,8 @@
 					styleClass="col-sm-2 control-label">Postleitzahl *</h:outputLabel>
 				<div class="col-sm-10">
 					<h:inputText id="addressZipCode"
-						value="#{registerHome.address.zipCode}" required="true"
-						styleClass="form-control" pt:placeholder="Enter Zip Code">
+						value="#{registerHome.address.zipCode}" styleClass="form-control"
+						pt:placeholder="Enter Zip Code">
 						<f:validateLength minimum="5" maximum="11" />
 					</h:inputText>
 					<p:message for="addressZipCode" />
@@ -129,10 +129,11 @@
 			<!-- captcha -->
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<p:captcha label="Captcha" secure="true" theme="white"
+					<p:captcha id="captcha" label="Captcha" secure="true" theme="white"
 						language="de" required="true"
 						requiredMessage="Bitte geben Sie die angezeigten Zeichen im Captcha Dialog ein."
 						validatorMessage="Die Captcha Prüfung ist fehlgeschlagen. Bitte versuchen Sie es erneut." />
+					<p:message for="captcha" />
 				</div>
 			</div>
 

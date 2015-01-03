@@ -1,6 +1,7 @@
 package de.th.wildau.recruiter.ejb.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -70,6 +71,12 @@ public class ArticleService extends Crud {
 			bc.setIban(payBc.getIban());
 			p.setPayBc(bc);
 		} else if (payCc != null) {
+			final Calendar cal = Calendar.getInstance();
+			if (cal.get(Calendar.YEAR) == Integer.valueOf(payCc.getExYear())
+					&& cal.get(Calendar.MONTH) < Integer.valueOf(payCc
+							.getExYear())) {
+				throw new BusinessException(BusinessError.CREDIT_CARD_GONE);
+			}
 			final PayCreditCard cc = new PayCreditCard();
 			cc.setCardType(payCc.getCardType());
 			cc.setExMonth(payCc.getExMonth());
