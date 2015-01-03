@@ -30,34 +30,35 @@
 							<li><a
 								href="#{request.contextPath}/public/browse.jsf?faces-redirect=true"><i
 									class="fa fa-eye" /> <!-- TODO i class="fa fa-binoculars" /-->
-									Durchsuchen</a></li>
+									#{msg['navi.browse']}</a></li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<!-- right menu -->
 							<li class="dropdown"><a href="#" class="dropdown-toggle"
 								data-toggle="dropdown"><i class="fa fa-language fa-fw"
-									title="lang" /> Sprache <i class="caret" /></a>
+									title="lang" /> #{msg['navi.lang']} <i class="caret" /></a>
 								<ul class="dropdown-menu">
-									<li><h:commandLink value="de"
+									<!-- no ajax because captcha doesn't support it -->
+									<li><h:commandLink
 											action="#{localeHome.setLanguage('de')}" immediate="true">
 											<!--f:ajax render="@all" /-->
-											<!-- no ajax because captcha doesn't support it -->
+											<h:outputText value="#{msg['navi.lang.de']}" />
 										</h:commandLink></li>
-									<li><h:commandLink value="en"
+									<li><h:commandLink
 											action="#{localeHome.setLanguage('en')}" immediate="true">
 											<!--f:ajax render="@all" /-->
-											<!-- no ajax because captcha doesn't support it -->
+											<h:outputText value="#{msg['navi.lang.en']}" />
 										</h:commandLink></li>
 								</ul></li>
 							<li><a
 								href="#{request.contextPath}/public/cart.jsf?faces-redirect=true"><i
-									class="fa fa-shopping-cart" /> Kaufen</a></li>
+									class="fa fa-shopping-cart" /> #{msg['navi.cart']}</a></li>
 							<ui:fragment rendered="#{empty request.userPrincipal}">
 								<li><a
 									href="#{request.contextPath}/public/signin.jsf?faces-redirect=true"><i
-										class="fa fa-sign-in" /> Anmelden</a></li>
+										class="fa fa-sign-in" /> #{msg['navi.signin']}</a></li>
 								<li><a
-									href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">Registrieren</a></li>
+									href="#{request.contextPath}/public/signup.jsf?faces-redirect=true">#{msg['navi.signup']}</a></li>
 							</ui:fragment>
 							<ui:fragment rendered="#{not empty request.userPrincipal}">
 								<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -66,18 +67,18 @@
 									<ul class="dropdown-menu">
 										<ui:fragment rendered="#{request.isUserInRole('ADMIN')}">
 											<li><a href="/#{baseHome.contextRoot}/admin/"><i
-													class="fa fa-tachometer" /> Übersicht</a></li>
+													class="fa fa-tachometer" /> #{msg['navi.dashboard']}</a></li>
 										</ui:fragment>
 										<ui:fragment rendered="#{not request.isUserInRole('ADMIN')}">
 											<li><a href="/#{baseHome.contextRoot}/my/"><i
-													class="fa fa-tachometer" /> Übersicht</a></li>
+													class="fa fa-tachometer" /> #{msg['navi.dashboard']}</a></li>
 											<li><a
 												href="/#{baseHome.contextRoot}/my/profile.jsf?faces-redirect=true"><i
-													class="fa fa-cogs" /> Profil</a></li>
+													class="fa fa-cogs" /> #{msg['navi.profile']}</a></li>
 										</ui:fragment>
 										<li class="divider"></li>
 										<li><h:commandLink value="" action="#{signinHome.logout}">
-												<i class="fa fa-sign-out" /> Abmelden</h:commandLink></li>
+												<i class="fa fa-sign-out" /> #{msg['navi.signout']}</h:commandLink></li>
 									</ul></li>
 							</ui:fragment>
 						</ul>

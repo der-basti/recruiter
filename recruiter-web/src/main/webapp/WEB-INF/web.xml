@@ -34,10 +34,6 @@
 		<param-name>primefaces.THEME</param-name>
 		<param-value>bootstrap</param-value>
 	</context-param>
-	<!--context-param>
-		<param-name>primefaces.CACHE_PROVIDER</param-name>
-		<param-value>org.primefaces.cache.EHCacheProvider</param-value>
-	</context-param-->
 	<context-param>
 		<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
 		<param-value>YOUR_PRIVATE_CAPTCHA_KEY</param-value>
@@ -71,6 +67,8 @@
 		<tracking-mode>COOKIE</tracking-mode>
 	</session-config>
 
+	<!-- securirty config: http://docs.oracle.com/javaee/6/tutorial/doc/gkbaa.html -->
+
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>
@@ -79,6 +77,7 @@
 		</form-login-config>
 	</login-config>
 
+	<!-- security roles used by this web application -->
 	<security-role>
 		<role-name>ADMIN</role-name>
 	</security-role>

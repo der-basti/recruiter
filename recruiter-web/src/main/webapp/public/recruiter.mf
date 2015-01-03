@@ -1,7 +1,7 @@
 CACHE MANIFEST
 # http://www.html5rocks.com/en/tutorials/appcache/beginner/
 
-# Explicitly cached 'master entries'.
+# Explicitly cached 'master entries'
 CACHE:
 https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css
 https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
@@ -10,11 +10,10 @@ https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js
 https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js
 https://oss.maxcdn.com/respond/1.4.2/respond.min.js
 
-# Resources that require the user to be online.
+# Resources that require the user to be online
 NETWORK:
-#*
-https://code.jquery.com/jquery-1.11.1.min.js
+*
 
 # offline.html will be displayed if the user is offline
 FALLBACK:
-/recruiter/ /recruiter/public/
+/recruiter/ /recruiter/public/offline.html

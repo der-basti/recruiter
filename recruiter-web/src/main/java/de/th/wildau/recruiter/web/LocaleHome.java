@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import javax.enterprise.inject.Produces;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 
 /**
  * Handle the user locale.
@@ -14,7 +14,7 @@ import javax.inject.Named;
  * @author s7n
  *
  */
-@Named
+@ManagedBean
 @SessionScoped
 public class LocaleHome implements Serializable {
 
