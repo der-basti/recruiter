@@ -65,7 +65,8 @@
 										#{request.userPrincipal.name}<b class="caret"></b></a>
 									<ul class="dropdown-menu">
 										<ui:fragment rendered="#{request.isUserInRole('ADMIN')}">
-											<li><a href="/#{baseHome.contextRoot}/admin/">Übersicht</a></li>
+											<li><a href="/#{baseHome.contextRoot}/admin/"><i
+													class="fa fa-tachometer" /> Übersicht</a></li>
 										</ui:fragment>
 										<ui:fragment rendered="#{not request.isUserInRole('ADMIN')}">
 											<li><a href="/#{baseHome.contextRoot}/my/"><i
