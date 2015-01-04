@@ -6,6 +6,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import lombok.Getter;
+import lombok.Setter;
+import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.model.User;
 import de.th.wildau.recruiter.ejb.service.UserService;
 
@@ -22,6 +24,7 @@ public class ProfileHome extends AbstractHome {
 	private static final long serialVersionUID = -8059542501435440194L;
 
 	@Getter
+	@Setter
 	private User user;
 
 	@Inject
@@ -31,5 +34,14 @@ public class ProfileHome extends AbstractHome {
 	public void init() {
 		this.user = this.userService.getUser(getRequest().getUserPrincipal()
 				.getName(), "roles", "address");
+	}
+
+	public String updateProfile() {
+		try {
+			this.userService.updateProfile(this.user);
+		} catch (final BusinessException e) {
+			addErrorMessage(e);
+		}
+		return "";
 	}
 }

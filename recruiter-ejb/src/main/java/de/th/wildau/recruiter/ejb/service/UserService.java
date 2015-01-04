@@ -356,6 +356,21 @@ public class UserService extends Crud {
 		return token;
 	}
 
+	/**
+	 * Update the current user profile.
+	 * 
+	 * @param user
+	 *            with new addess
+	 * @throws BusinessException
+	 */
+	public void updateProfile(final User user) throws BusinessException {
+		isMy(user.getId());
+		final User u = getUser(user.getEmail(), "address");
+		u.setAddress(user.getAddress());
+		merge(u.getAddress());
+		merge(u);
+	}
+
 	private String getRandom() {
 		return RandomStringUtils.randomAlphanumeric(32);
 	}
@@ -379,6 +394,12 @@ public class UserService extends Crud {
 	@Deprecated
 	private String hashSha(final String value) {
 		return Hashing.sha256().hashString(value, Charsets.UTF_8).toString();
+	}
+
+	private void isMy(final Long userId) throws BusinessException {
+		if (userId != getCurrentUser().getId()) {
+			throw new BusinessException(BusinessError.THIS_IS_NOT_YOURS);
+		}
 	}
 
 	/**

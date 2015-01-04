@@ -56,8 +56,7 @@ public abstract class BaseEntity<T extends BaseEntity<?>> implements
 			return null;
 		}
 		final String trim = value.trim();
-		final String clean = Jsoup.clean(trim,
-				Whitelist.none().addAttributes("br"));
+		final String clean = Jsoup.clean(trim, Whitelist.none());
 		final String escapeSeq = StringEscapeUtils.escapeEcmaScript(clean);
 		return escapeSeq;
 	}

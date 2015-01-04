@@ -41,8 +41,9 @@
 					<h:outputLabel for="title" value="Title"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:outputText id="title" value="#{profileHome.user.address.title}"
+						<h:inputText id="title" value="#{profileHome.user.address.title}"
 							styleClass="form-control" />
+						<p:message for="title" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -51,41 +52,54 @@
 					<div class="col-sm-10">
 						<h:outputText id="name" value="#{profileHome.user.address.name}"
 							styleClass="form-control" />
+						<p:message for="name" />
 					</div>
 				</div>
 				<div class="form-group">
 					<h:outputLabel for="street" value="Straße"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:outputText id="street"
+						<h:inputText id="street"
 							value="#{profileHome.user.address.street}"
 							styleClass="form-control" />
+						<p:message for="street" />
 					</div>
 				</div>
 				<div class="form-group">
 					<h:outputLabel for="streetNumber" value="Hausnummer"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:outputText id="streetNumber"
+						<h:inputText id="streetNumber"
 							value="#{profileHome.user.address.streetNumber}"
 							styleClass="form-control" />
+						<p:message for="streetNumber" />
 					</div>
 				</div>
 				<div class="form-group">
 					<h:outputLabel for="zipCode" value="Postleitzahl"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:outputText id="zipCode"
+						<h:inputText id="zipCode"
 							value="#{profileHome.user.address.zipCode}"
 							styleClass="form-control" />
+						<p:message for="zipCode" />
 					</div>
 				</div>
 				<div class="form-group">
 					<h:outputLabel for="city" value="Stadt"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:outputText id="city" value="#{profileHome.user.address.city}"
+						<h:inputText id="city" value="#{profileHome.user.address.city}"
 							styleClass="form-control" />
+						<p:message for="city" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<h:commandButton id="btnUpdate"
+							action="#{profileHome.updateProfile}" value="Aktualisieren"
+							styleClass="btn btn-default" />
 					</div>
 				</div>
 			</div>
