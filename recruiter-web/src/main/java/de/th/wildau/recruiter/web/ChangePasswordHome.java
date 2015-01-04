@@ -8,10 +8,10 @@ import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.service.UserService;
 
 /**
@@ -21,30 +21,41 @@ import de.th.wildau.recruiter.ejb.service.UserService;
  */
 @Named
 @ViewScoped
-public class ResetPasswordHome extends AbstractHome {
+public class ChangePasswordHome extends AbstractHome {
 
 	private static final Logger log = LoggerFactory
-			.getLogger(ResetPasswordHome.class);
+			.getLogger(ChangePasswordHome.class);
 
 	private static final long serialVersionUID = 7072531855657861217L;
 
 	@Getter
-	@Setter
-	@Email
 	private String email;
+
+	@Getter
+	@Setter
+	private String newPw;
+
+	@Getter
+	@Setter
+	private String oldPw;
 
 	@Inject
 	private UserService userService;
 
-	@PostConstruct
-	public void init() {
-		log.debug("init");
-
+	public String change() {
+		log.info("change password");
+		try {
+			this.userService.changePassword(this.email, this.oldPw, this.newPw);
+			return redirect("/my");
+		} catch (final BusinessException e) {
+			log.error(e.getMessage());
+			addErrorMessage(e);
+		}
+		return "";
 	}
 
-	public String reset() {
-		log.info("reset password");
-		this.userService.resetPasswordTokens(this.email);
-		return "";
+	@PostConstruct
+	public void init() {
+		this.email = getParam("email");
 	}
 }

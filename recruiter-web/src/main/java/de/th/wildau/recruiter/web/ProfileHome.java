@@ -30,6 +30,15 @@ public class ProfileHome extends AbstractHome {
 	@Inject
 	private UserService userService;
 
+	/**
+	 * Navigate to change password site.
+	 * 
+	 * @return String navigation
+	 */
+	public String changePw() {
+		return redirect("/my/changePassword.jsf?email=" + this.user.getEmail());
+	}
+
 	@PostConstruct
 	public void init() {
 		this.user = this.userService.getUser(getRequest().getUserPrincipal()

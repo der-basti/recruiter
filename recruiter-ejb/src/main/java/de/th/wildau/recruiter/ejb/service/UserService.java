@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
@@ -151,6 +150,36 @@ public class UserService extends Crud {
 	}
 
 	/**
+	 * Generate tokens to reset a forgotten password. Follow by method call
+	 * {@link #resetPasswordToken(String, String, String)}.
+	 * 
+	 * @param email
+	 * @return String token
+	 * @throws BusinessException
+	 */
+	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
+	public void changePassword(final String email, final String oldPassword,
+			final String newPassword) throws BusinessException {
+		// https://stackoverflow.com/questions/2734367/implement-password-recovery-best-practice
+		final User u = getUser(email.toLowerCase());
+		isMy(u.getId());
+
+		// check old password
+		final String dbPW = u.getPassword();
+		final String checkPW = hashPassword(oldPassword + u.getPasswordSalt());
+		if (!dbPW.equals(checkPW)) {
+			throw new BusinessException(BusinessError.INVALID_PASSWORD);
+		}
+		// change password
+		u.setPasswordSalt(getRandom());
+		u.setPassword(hashPassword(newPassword + u.getPasswordSalt()));
+		merge(u);
+		this.em.flush();
+		this.mailService.send("Your recruter password has changed",
+				"Hello, your password has been changed.", u.getEmail());
+	}
+
+	/**
 	 * Equals to {@code #getUser(String)}, but return {@code null} if none
 	 * entity found.
 	 * 
@@ -177,6 +206,7 @@ public class UserService extends Crud {
 	 * 
 	 * @return User or {@code null}
 	 */
+	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public User getCurrentUser() {
 		return findUser(getCurrentUserId());
 	}
@@ -296,7 +326,6 @@ public class UserService extends Crud {
 							.getEmail());
 		} catch (final ConstraintViolationException e) {
 			this.log.error(e.getMessage());
-			return;
 		}
 	}
 
@@ -327,36 +356,6 @@ public class UserService extends Crud {
 	}
 
 	/**
-	 * Generate tokens to reset a forgotten password. Follow by method call
-	 * {@link #resetPasswordToken(String, String, String)}.
-	 * 
-	 * @param email
-	 * @return String token
-	 */
-	public String resetPasswordTokens(final String email) {
-		// TODO implement -
-		// https://stackoverflow.com/questions/2734367/implement-password-recovery-best-practice
-		// exist user
-		final User u = getUser(email.toLowerCase());
-		if (u == null) {
-
-		}
-		// > no exit
-
-		// generate key > mail
-		// final String key = hashBaseSha(getRandom());
-		// generate token > write paper
-		final int length = 5;
-		final int r = new Random().nextInt(31 - length);
-		final String token = getRandom().subSequence(r, r + length).toString()
-				.toUpperCase();
-
-		// persist
-
-		return token;
-	}
-
-	/**
 	 * Update the current user profile.
 	 * 
 	 * @param user
@@ -366,9 +365,12 @@ public class UserService extends Crud {
 	public void updateProfile(final User user) throws BusinessException {
 		isMy(user.getId());
 		final User u = getUser(user.getEmail(), "address");
+		final String oldEmail = u.getEmail();
 		u.setAddress(user.getAddress());
 		merge(u.getAddress());
 		merge(u);
+		this.mailService.send("Your recruter profile changed",
+				"Hello, your profile has been changed.", oldEmail);
 	}
 
 	private String getRandom() {
