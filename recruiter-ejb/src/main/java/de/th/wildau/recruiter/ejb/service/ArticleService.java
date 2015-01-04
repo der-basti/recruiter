@@ -66,6 +66,7 @@ public class ArticleService extends Crud {
 		a.setTitle(title);
 		a.setContent(content);
 		p.getArticles().add(a);
+		a.setPurchase(p);
 		// pay
 		if (payBc != null) {
 			final PayBankCard bc = new PayBankCard();
