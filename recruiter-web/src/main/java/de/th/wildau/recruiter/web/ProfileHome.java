@@ -48,6 +48,7 @@ public class ProfileHome extends AbstractHome {
 	public String updateProfile() {
 		try {
 			this.userService.updateProfile(this.user);
+			return redirect("/my");
 		} catch (final BusinessException e) {
 			addErrorMessage(e);
 		}
