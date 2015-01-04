@@ -47,6 +47,16 @@ public abstract class AbstractHome implements Serializable {
 	@Inject
 	protected May may;
 
+	/**
+	 * Cutting a string to 100 charechters.
+	 * 
+	 * @param value
+	 * @return String cutting
+	 */
+	public String cutting(final String value) {
+		return cutting(value, 50);
+	}
+
 	public String roleSet2String(final Collection<Role> roles) {
 		final StringBuilder sb = new StringBuilder();
 		for (final Iterator<Role> i = roles.iterator(); i.hasNext();) {
@@ -74,6 +84,16 @@ public abstract class AbstractHome implements Serializable {
 	private void addFacesMessage(final Severity severity, final String message) {
 		final FacesContext context = FacesContext.getCurrentInstance();
 		context.addMessage(null, new FacesMessage(severity, message, null));
+	}
+
+	private String cutting(final String value, final int length) {
+		if (StringUtils.isEmpty(value)) {
+			return value;
+		} else if (value.length() < length) {
+			return value;
+		} else {
+			return value.substring(0, length) + "...";
+		}
 	}
 
 	private String getMessage(final FacesContext facesContext,

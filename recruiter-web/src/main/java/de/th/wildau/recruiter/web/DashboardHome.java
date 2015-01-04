@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.model.Article;
+import de.th.wildau.recruiter.ejb.model.Comment;
 import de.th.wildau.recruiter.ejb.model.Price;
 import de.th.wildau.recruiter.ejb.service.ArticleService;
 
@@ -29,6 +30,9 @@ public class DashboardHome extends AbstractHome {
 
 	@Inject
 	private ArticleService articleService;
+
+	@Getter
+	private List<Comment> comments;
 
 	/**
 	 * Price for a article. A user should have currently only one role.
@@ -50,6 +54,7 @@ public class DashboardHome extends AbstractHome {
 	@PostConstruct
 	public void init() {
 		this.articles = this.articleService.findMyArticles();
+		this.comments = this.articleService.findMyComments();
 		this.price = this.articleService.findMyPrice();
 	}
 

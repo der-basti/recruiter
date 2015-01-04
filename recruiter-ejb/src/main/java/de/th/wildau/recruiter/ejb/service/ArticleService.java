@@ -196,6 +196,32 @@ public class ArticleService extends Crud {
 	}
 
 	/**
+	 * Find all comments from the current user.
+	 * 
+	 * @return
+	 */
+	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
+	public List<Comment> findMyComments() {
+		final User user = this.userService.getCurrentUser();
+		if (user == null) {
+			return new ArrayList<>();
+		}
+		try {
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
+			final CriteriaQuery<Comment> cq = cb.createQuery(Comment.class);
+			final Root<Comment> r = cq.from(Comment.class);
+			r.fetch("user");
+			r.fetch("article");
+			cq.select(r).where(cb.equal(r.get("user"), user));
+			final TypedQuery<Comment> q = this.em.createQuery(cq);
+			return q.getResultList();
+		} catch (final NoResultException e) {
+			log.error("can not find my comments", e);
+			return new ArrayList<>();
+		}
+	}
+
+	/**
 	 * Get current price for all roles from the current user (a user should have
 	 * only one role).
 	 * 
@@ -219,6 +245,11 @@ public class ArticleService extends Crud {
 		}
 	}
 
+	/**
+	 * Find all purchases from the current user.
+	 * 
+	 * @return
+	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public List<Purchase> findMyPurchases() {
 		final User user = this.userService.getCurrentUser();

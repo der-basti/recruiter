@@ -10,28 +10,51 @@
 		<h1>Übersicht</h1>
 
 		<h:form id="frmBrowse">
-			<p:dataTable id="dtArticles" value="#{dashboardHome.articles}"
-				var="item" rowKey="#{item.id}" rows="10" paginator="true"
-				rowsPerPageTemplate="5,10,15"
-				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-				<p:column headerText="Titel">
-					#{item.title}
-				</p:column>
-				<p:column headerText="Erstellt am" width="200">
-					<h:outputText id="createDate" value="#{item.createDate}">
-						<f:convertDateTime type="both" locale="de" />
-					</h:outputText>
-				</p:column>
-				<p:column headerText="" width="110">
-					<p:commandButton icon="ui-icon-document" title="Edit"
-						action="#{dashboardHome.show(item.id)}">
-						<f:param name="id" value="#{item.id}" />
-					</p:commandButton>
-					<p:commandButton icon="ui-icon-trash" title="Delete"
-						action="#{dashboardHome.deleteArticle(item.id)}">
-					</p:commandButton>
-				</p:column>
-			</p:dataTable>
+			<p:tabView id="tabView" dynamic="true" cache="true">
+				<p:tab title="Artikel">
+					<p:dataTable id="dtArticles" value="#{dashboardHome.articles}"
+						var="item" rowKey="#{item.id}" rows="10" paginator="true"
+						rowsPerPageTemplate="5,10,15"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column headerText="Titel">
+							#{item.title}
+						</p:column>
+						<p:column headerText="Erstellt am" width="200">
+							<h:outputText id="createDate" value="#{item.createDate}">
+								<f:convertDateTime type="both" locale="de" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="" width="110">
+							<p:commandButton icon="ui-icon-document" title="Edit"
+								action="#{dashboardHome.show(item.id)}">
+								<f:param name="id" value="#{item.id}" />
+							</p:commandButton>
+							<p:commandButton icon="ui-icon-trash" title="Delete"
+								action="#{dashboardHome.deleteArticle(item.id)}">
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="Kommentare">
+					<p:dataTable id="dtComments" value="#{dashboardHome.comments}"
+						var="item" rowKey="#{item.id}" rows="10" paginator="true"
+						rowsPerPageTemplate="5,10,15"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column headerText="Datum">
+							<h:outputText value="#{item.createDate}">
+								<f:convertDateTime type="both" locale="de" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Kommentar">
+							#{item.content}
+						</p:column>
+						<p:column headerText="Artikel">
+							<a
+								href="#{request.contextPath}/public/view.jsf?id=#{item.article.id}">#{dashboardHome.cutting(item.article.title)}</a>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
 		</h:form>
 	</ui:define>
 </ui:composition>
