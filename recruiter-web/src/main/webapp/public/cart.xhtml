@@ -36,7 +36,7 @@
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
 						<h:inputText id="title" value="#{cartHome.article.title}"
-							styleClass="form-control">
+							styleClass="form-control" pt:maxlength="255">
 							<f:validateLength minimum="1" maximum="255" />
 							<!-- <f:validateBean /> -->
 						</h:inputText>
@@ -48,7 +48,7 @@
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
 						<h:inputTextarea id="content" value="#{cartHome.article.content}"
-							rows="10" styleClass="form-control">
+							rows="10" styleClass="form-control" pt:maxlength="1024">
 							<f:validateLength minimum="1" maximum="1024" />
 						</h:inputTextarea>
 						<p:message for="content" />

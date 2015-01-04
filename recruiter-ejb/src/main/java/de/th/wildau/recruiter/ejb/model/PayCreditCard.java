@@ -55,6 +55,7 @@ public class PayCreditCard extends BaseEntity<PayCreditCard> {
 
 	@NotBlank
 	@Length(min = 1, max = 30)
+	// @CreditCardNumber(message = "Ungültige Kreditkartennummer.")
 	@Pattern(regexp = "[0-9]{13,16}", message = "Die Nummer muss 13-16 Zeichen lang sein.")
 	@Column(length = 31, nullable = false, updatable = false)
 	private String number;

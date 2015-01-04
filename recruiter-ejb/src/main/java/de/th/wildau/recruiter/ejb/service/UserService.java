@@ -206,7 +206,6 @@ public class UserService extends Crud {
 	 * 
 	 * @return User or {@code null}
 	 */
-	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public User getCurrentUser() {
 		return findUser(getCurrentUserId());
 	}
@@ -377,10 +376,10 @@ public class UserService extends Crud {
 		return RandomStringUtils.randomAlphanumeric(32);
 	}
 
-	@Deprecated
-	private String hashBaseSha(final String value) {
-		return Base64.getEncoder().encodeToString(hashSha(value).getBytes());
-	}
+	// @Deprecated
+	// private String hashBaseSha(final String value) {
+	// return Base64.getEncoder().encodeToString(hashSha(value).getBytes());
+	// }
 
 	private String hashPassword(final String value) {
 		try {

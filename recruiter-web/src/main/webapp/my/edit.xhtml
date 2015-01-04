@@ -13,7 +13,7 @@
 
 	<ui:define name="content">
 		<h1>Editieren</h1>
-		
+
 		<p class="form-control-static">
 			<h:outputLink value="/#{baseHome.contextRoot}/my/">Zurück</h:outputLink>
 		</p>
@@ -29,7 +29,10 @@
 					styleClass="col-sm-2 control-label" />
 				<div class="col-sm-10">
 					<h:inputText id="title" value="#{editArticleHome.article.title}"
-						styleClass="form-control" />
+						styleClass="form-control" pt:maxlength="1024">
+						<f:validateLength minimum="1" maximum="255" />
+					</h:inputText>
+					<p:message for="title" />
 				</div>
 			</div>
 			<div class="form-group">
@@ -49,7 +52,10 @@
 				<div class="col-sm-10">
 					<h:inputTextarea id="content"
 						value="#{editArticleHome.article.content}"
-						styleClass="form-control" />
+						styleClass="form-control" pt:maxlength="1024">
+						<f:validateLength minimum="1" maximum="1024" />
+					</h:inputTextarea>
+					<p:message for="content" />
 				</div>
 			</div>
 
@@ -59,9 +65,8 @@
 						action="#{editArticleHome.updateArticle}" value="Aktualisieren"
 						styleClass="btn btn-default" />
 					<h:commandButton id="btnDelete"
-						action="#{editArticleHome.deleteArticle}"
-						value="Löschen" styleClass="btn btn-default"
-						style="margin-left:10px" />
+						action="#{editArticleHome.deleteArticle}" value="Löschen"
+						styleClass="btn btn-default" style="margin-left:10px" />
 				</div>
 			</div>
 		</h:form>

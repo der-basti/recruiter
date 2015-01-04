@@ -14,6 +14,8 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -145,6 +147,10 @@ public abstract class AbstractHome implements Serializable {
 				.getExternalContext().getRequest();
 		return request instanceof HttpServletRequest ? (HttpServletRequest) request
 				: null;
+	}
+
+	protected Validator getValidator() {
+		return Validation.buildDefaultValidatorFactory().getValidator();
 	}
 
 	protected String redirect(final String urlFromRootContext) {

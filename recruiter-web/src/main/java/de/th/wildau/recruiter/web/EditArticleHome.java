@@ -7,6 +7,9 @@ import javax.inject.Named;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
+
 import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.model.Article;
@@ -63,6 +66,14 @@ public class EditArticleHome extends AbstractHome {
 	 * @return String navigation
 	 */
 	public String updateArticle() {
+		if (StringUtils.isBlank(this.article.getContent())) {
+			addErrorMessage(new BusinessException(BusinessError.NOT_EMPTY));
+			return "";
+		}
+		if (StringUtils.isBlank(this.article.getTitle())) {
+			addErrorMessage(new BusinessException(BusinessError.NOT_EMPTY));
+			return "";
+		}
 		try {
 			this.articleService.update(this.article);
 			addInfoMessage("msg.article.updated");

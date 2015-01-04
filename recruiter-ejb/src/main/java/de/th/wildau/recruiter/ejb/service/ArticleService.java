@@ -41,6 +41,9 @@ public class ArticleService extends Crud {
 			.getLogger(ArticleService.class);
 
 	@Inject
+	private MailService mailService;
+
+	@Inject
 	private UserService userService;
 
 	/**
@@ -91,6 +94,11 @@ public class ArticleService extends Crud {
 			throw new BusinessException(BusinessError.INVALID_PAY_INFO);
 		}
 		save(p);
+		this.mailService.send(
+				"Your New Purchase",
+				"Hello, congratulation!\nYou have buy a new article for "
+						+ p.getPrice() + " Euro.\nYour recruiter team",
+				getCurrentUserId());
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class ArticleService extends Crud {
 		final Comment comment = new Comment();
 		comment.setCreateDate(new Date());
 		comment.setArticle(article);
-		comment.setContent(content);
+		comment.setContent(content.trim());
 		comment.setUser(this.userService.getCurrentUser());
 		save(comment);
 	}

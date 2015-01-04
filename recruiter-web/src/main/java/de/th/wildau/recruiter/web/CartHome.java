@@ -13,6 +13,7 @@ import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,6 +89,14 @@ public class CartHome extends AbstractHome {
 	private List<Purchase> purchases;
 
 	public String buy() {
+		if (StringUtils.isBlank(this.article.getContent())) {
+			addErrorMessage(new BusinessException(BusinessError.NOT_EMPTY));
+			return "";
+		}
+		if (StringUtils.isBlank(this.article.getTitle())) {
+			addErrorMessage(new BusinessException(BusinessError.NOT_EMPTY));
+			return "";
+		}
 		try {
 			PayBankCard bc = null;
 			PayCreditCard cc = null;
