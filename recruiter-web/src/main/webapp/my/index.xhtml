@@ -10,8 +10,8 @@
 		<h1>Übersicht</h1>
 
 		<h:form id="frmBrowse">
-			<p:dataTable id="dtArticles" value="#{dashboardHome.articles}" var="item"
-				rowKey="#{item.id}" rows="10" paginator="true"
+			<p:dataTable id="dtArticles" value="#{dashboardHome.articles}"
+				var="item" rowKey="#{item.id}" rows="10" paginator="true"
 				rowsPerPageTemplate="5,10,15"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 				<p:column headerText="Titel">
@@ -23,7 +23,13 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="" width="110">
-					TODO edit, delete
+					<p:commandButton icon="ui-icon-document" title="Edit"
+						action="#{dashboardHome.show(item.id)}">
+						<f:param name="id" value="#{item.id}" />
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash" title="Delete"
+						action="#{dashboardHome.deleteArticle(item.id)}">
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>

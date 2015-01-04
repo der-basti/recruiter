@@ -45,7 +45,7 @@ public class Article extends BaseEntity<Article> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 
-	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.LAZY)
 	private Purchase purchase;
 
 	@NotBlank

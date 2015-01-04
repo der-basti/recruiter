@@ -1,5 +1,6 @@
 package de.th.wildau.recruiter.ejb.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
+import de.th.wildau.recruiter.ejb.RoleName;
 import de.th.wildau.recruiter.ejb.model.Article;
 import de.th.wildau.recruiter.ejb.model.Comment;
 import de.th.wildau.recruiter.ejb.model.PayBankCard;
@@ -238,6 +240,49 @@ public class ArticleService extends Crud {
 		}
 	}
 
+	/**
+	 * Get the price for the current user.
+	 * 
+	 * @return BigDecimal
+	 */
+	@PermitAll
+	public BigDecimal getPrice() {
+		final User user = this.userService.getUser(getCurrentUserId(), "roles");
+		if (user != null) {
+			for (final Role role : user.getRoles()) {
+				return getPrice(role.getName());
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the price for specific role.
+	 * 
+	 * @return BigDecimal
+	 */
+	@PermitAll
+	public BigDecimal getPrice(final RoleName role) {
+		try {
+			final CriteriaBuilder cb = this.em.getCriteriaBuilder();
+			final CriteriaQuery<Price> cq = cb.createQuery(Price.class);
+			final Root<Price> r = cq.from(Price.class);
+			cq.select(r).where(cb.equal(r.get("roleName"), role));
+			final TypedQuery<Price> q = this.em.createQuery(cq);
+			final Price res = q.getSingleResult();
+			return res.getPrice();
+		} catch (final NoResultException e) {
+			log.error("can not find my price", e);
+			return null;
+		}
+	}
+
+	/**
+	 * Update a article from me.
+	 * 
+	 * @param article
+	 * @throws BusinessException
+	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public Article update(final Article article) throws BusinessException {
 		if (article == null) {

@@ -13,7 +13,7 @@
 			<p:column headerText="email">
         		#{item.email}
         	</p:column>
-			<!--p:column headerText="roles">
+			<p:column headerText="roles">
 				<ui:repeat value="#{item.roles}" var="j">
 					#{dashboardAdmin.roleSet2String(j)}
 				</ui:repeat>
@@ -23,12 +23,6 @@
         	</p:column>
 			<p:column headerText="signinAttempts">
         		#{item.signinAttempts}
-        	</p:column-->
-        	<p:column headerText="pw">
-        		#{item.password}
-        	</p:column>
-        	<p:column headerText="pw salt">
-        		#{item.passwordSalt}
         	</p:column>
 		</p:dataTable>
 	</ui:define>

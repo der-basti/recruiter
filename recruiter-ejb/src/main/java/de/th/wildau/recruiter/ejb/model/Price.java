@@ -35,6 +35,7 @@ public class Price extends BaseEntity<Price> {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(length = 31, nullable = false, unique = true)
+	// @OneToOne(optinal = false)
 	private RoleName roleName;
 
 	public Price() {

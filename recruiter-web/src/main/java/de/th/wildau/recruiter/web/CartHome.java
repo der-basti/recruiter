@@ -20,6 +20,7 @@ import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
 import de.th.wildau.recruiter.ejb.PayCreditCardType;
 import de.th.wildau.recruiter.ejb.PayType;
+import de.th.wildau.recruiter.ejb.RoleName;
 import de.th.wildau.recruiter.ejb.model.Article;
 import de.th.wildau.recruiter.ejb.model.PayBankCard;
 import de.th.wildau.recruiter.ejb.model.PayCreditCard;
@@ -111,6 +112,18 @@ public class CartHome extends AbstractHome {
 			log.error(e.getMessage());
 		}
 		return "";
+	}
+
+	public Float getCompanyPrice() {
+		return this.articleService.getPrice(RoleName.COMPANY).floatValue();
+	}
+
+	public Float getPrice() {
+		return this.articleService.getPrice().floatValue();
+	}
+
+	public Float getUserPrice() {
+		return this.articleService.getPrice(RoleName.USER).floatValue();
 	}
 
 	@PostConstruct
