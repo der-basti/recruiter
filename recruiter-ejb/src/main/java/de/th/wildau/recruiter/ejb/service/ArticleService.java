@@ -146,13 +146,16 @@ public class ArticleService extends Crud {
 			final Article res = this.em.createQuery(cq).getSingleResult();
 			// final TypedQuery<Article> q = this.crud.em.createQuery(cq);
 			// final Article res = q.getResultList().get(0);
-			// TODO fetch comments.user.address
+
 			if (res != null) {
+				// fetch comments.user.address
 				for (final Comment c : res.getComments()) {
 					if (c.getUser() != null) {
 						c.getUser().getAddress().getName();
 					}
 				}
+				// fetch article user name
+				res.getPurchase().getUser().getAddress().getName();
 			}
 			return res;
 		} catch (final NoResultException e) {
