@@ -16,8 +16,11 @@
 					<h:outputLabel for="email" value="E-Mail"
 						styleClass="col-sm-2 control-label" />
 					<div class="col-sm-10">
-						<h:inputText id="email" value="#{profileHome.user.email}"
-							styleClass="form-control" />
+						<h:commandLink id="email" action="#{profileHome.changeEmail}"
+							styleClass="form-control-static">
+							<h:outputText value="#{profileHome.user.email} ändern" />
+							<f:param name="email" value="#{profileHome.user.email}" />
+						</h:commandLink>
 						<p:message for="email" />
 					</div>
 				</div>

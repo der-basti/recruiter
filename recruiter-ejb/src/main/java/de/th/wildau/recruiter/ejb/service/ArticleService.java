@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -77,10 +78,11 @@ public class ArticleService extends Crud {
 			bc.setIban(payBc.getIban());
 			p.setPayBc(bc);
 		} else if (payCc != null) {
-			final Calendar cal = Calendar.getInstance();
-			if (cal.get(Calendar.YEAR) == Integer.valueOf(payCc.getExYear())
-					&& cal.get(Calendar.MONTH) < Integer.valueOf(payCc
-							.getExYear())) {
+			final Calendar ccDate = GregorianCalendar.getInstance();
+			ccDate.set(Integer.valueOf(payCc.getExYear()),
+					Integer.valueOf(payCc.getExMonth()) - 1, 1);
+			final Calendar cal = GregorianCalendar.getInstance();
+			if (cal.after(ccDate)) {
 				throw new BusinessException(BusinessError.CREDIT_CARD_GONE);
 			}
 			final PayCreditCard cc = new PayCreditCard();
@@ -89,6 +91,7 @@ public class ArticleService extends Crud {
 			cc.setExYear(payCc.getExYear());
 			cc.setName(payCc.getName());
 			cc.setNumber(payCc.getNumber());
+			cc.setNumberCheck(payCc.getNumberCheck());
 			p.setPayCc(cc);
 		} else {
 			throw new BusinessException(BusinessError.INVALID_PAY_INFO);

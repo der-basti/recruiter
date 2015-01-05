@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.th.wildau.recruiter.ejb.BusinessError;
 import de.th.wildau.recruiter.ejb.BusinessException;
@@ -24,6 +26,9 @@ import de.th.wildau.recruiter.ejb.service.ArticleService;
 @Named
 @ViewScoped
 public class EditArticleHome extends AbstractHome {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(EditArticleHome.class);
 
 	private static final long serialVersionUID = 6444486672653043318L;
 
@@ -52,6 +57,7 @@ public class EditArticleHome extends AbstractHome {
 			this.article = this.articleService.findArticle(Long
 					.valueOf(getParam("id")));
 		} catch (final NumberFormatException e) {
+			log.error(e.getMessage());
 			addErrorMessage(new BusinessException(BusinessError.INVALID_VIEW_ID));
 		}
 	}
@@ -67,10 +73,12 @@ public class EditArticleHome extends AbstractHome {
 	 */
 	public String updateArticle() {
 		if (StringUtils.isBlank(this.article.getContent())) {
+			log.warn("article content is blank");
 			addErrorMessage(new BusinessException(BusinessError.NOT_EMPTY));
 			return "";
 		}
 		if (StringUtils.isBlank(this.article.getTitle())) {
+			log.warn("article title is blank");
 			addErrorMessage(new BusinessException(BusinessError.NOT_EMPTY));
 			return "";
 		}
@@ -79,6 +87,7 @@ public class EditArticleHome extends AbstractHome {
 			addInfoMessage("msg.article.updated");
 			return redirect("/my");
 		} catch (final BusinessException e) {
+			log.error(e.getMessage());
 			addErrorMessage(e);
 		}
 		return "";

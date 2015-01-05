@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -35,7 +35,7 @@ import de.th.wildau.recruiter.ejb.service.ArticleService;
  *
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class CartHome extends AbstractHome {
 
 	public enum CartState {
@@ -106,6 +106,7 @@ public class CartHome extends AbstractHome {
 				break;
 			case CC:
 				cc = this.payCc;
+				cc.setCardType(this.ccType);
 				break;
 			default:
 				addErrorMessage(new BusinessException(
@@ -116,6 +117,7 @@ public class CartHome extends AbstractHome {
 					this.article.getContent(), bc, cc);
 			return redirect("/my/index.jsf");
 		} catch (final BusinessException e) {
+			log.error(e.getMessage());
 			addErrorMessage(e);
 		} catch (final Exception e) {
 			log.error(e.getMessage());
@@ -161,11 +163,6 @@ public class CartHome extends AbstractHome {
 			this.exYears.add(new SelectItem(i, String.valueOf(i)));
 		}
 		this.purchases = new ArrayList<>();
-	}
-
-	public void reset() {
-		this.article = new Article();
-		this.payType = null;
 	}
 
 	public boolean showBc() {

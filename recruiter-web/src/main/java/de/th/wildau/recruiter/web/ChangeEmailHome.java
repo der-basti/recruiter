@@ -21,33 +21,37 @@ import de.th.wildau.recruiter.ejb.service.UserService;
  */
 @Named
 @ViewScoped
-public class ChangePasswordHome extends AbstractHome {
+public class ChangeEmailHome extends AbstractHome {
 
 	private static final Logger log = LoggerFactory
-			.getLogger(ChangePasswordHome.class);
+			.getLogger(ChangeEmailHome.class);
 
 	private static final long serialVersionUID = 7072531855657861217L;
 
 	@Getter
-	private String email;
+	@Setter
+	private String emailNew;
+
+	@Getter
+	private String emailOld;
 
 	@Getter
 	@Setter
-	private String newPw;
+	private String password;
 
-	@Getter
-	@Setter
-	private String oldPw;
+	@Inject
+	private SigninHome signinHome;
 
 	@Inject
 	private UserService userService;
 
 	public String change() {
-		log.info("change password");
+		log.info("change email");
 		try {
-			this.userService.changePassword(this.email, this.oldPw, this.newPw);
+			this.userService.changeEmail(this.password, this.emailOld,
+					this.emailNew);
 			addInfoMessage("msg.profile.updated");
-			return redirect("/my");
+			return this.signinHome.logout();
 		} catch (final BusinessException e) {
 			log.error(e.getMessage());
 			addErrorMessage(e);
@@ -57,6 +61,6 @@ public class ChangePasswordHome extends AbstractHome {
 
 	@PostConstruct
 	public void init() {
-		this.email = getParam("email");
+		this.emailOld = getParam("email");
 	}
 }

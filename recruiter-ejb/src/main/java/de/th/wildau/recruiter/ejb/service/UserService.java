@@ -152,8 +152,34 @@ public class UserService extends Crud {
 	}
 
 	/**
-	 * Generate tokens to reset a forgotten password. Follow by method call
-	 * {@link #resetPasswordToken(String, String, String)}.
+	 * Change the current password from a user.
+	 * 
+	 * @param email
+	 * @return String token
+	 * @throws BusinessException
+	 */
+	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
+	public void changeEmail(final String password, final String oldEmail,
+			final String newEmail) throws BusinessException {
+		final User u = getUser(oldEmail.toLowerCase());
+		isMy(u.getId());
+
+		// check old password
+		final String dbPW = u.getPassword();
+		final String checkPW = hashPassword(password + u.getPasswordSalt());
+		if (!dbPW.equals(checkPW)) {
+			throw new BusinessException(BusinessError.INVALID_PASSWORD);
+		}
+		// change email
+		u.setEmail(newEmail.toLowerCase());
+		merge(u);
+		this.mailService.send("Your recruter email has changed",
+				"Hello, your email address has been changed to " + u.getEmail()
+						+ ".", oldEmail);
+	}
+
+	/**
+	 * Change the current password from a user.
 	 * 
 	 * @param email
 	 * @return String token
@@ -181,6 +207,21 @@ public class UserService extends Crud {
 		this.em.flush();
 		this.mailService.send("Your recruter password has changed",
 				"Hello, your password has been changed.", u.getEmail());
+	}
+
+	/**
+	 * Delete a user profile/account.
+	 * 
+	 * @param userId
+	 * @throws BusinessException
+	 */
+	@RolesAllowed({ "ADMIN" })
+	public void delete(final Long userId) throws BusinessException {
+		final User u = findById(User.class, userId);
+		if (u == null) {
+			throw new BusinessException(BusinessError.ACCOUNT_NOT_ACTIVE);
+		}
+		delete(u);
 	}
 
 	/**
@@ -338,14 +379,14 @@ public class UserService extends Crud {
 	}
 
 	/**
-	 * Reset a password from a user, which are currently signin.
+	 * Reset a password from a user, which are forgot her sign in.
 	 * 
 	 * @param email
-	 * @param oldPassword
+	 * @param token
 	 * @param newPassword
 	 */
-	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
-	public void resetPassword(final String email, final String oldPassword,
+	@PermitAll
+	public void resetPassword(final String email, final String token,
 			final String newPassword) {
 		// TODO implement
 	}
@@ -359,7 +400,7 @@ public class UserService extends Crud {
 	 * @param token
 	 */
 	public void resetPasswordToken(final String email, final String key,
-			final String token, final String newPassword) {
+			final String token) {
 		// TODO implement
 	}
 
@@ -394,14 +435,14 @@ public class UserService extends Crud {
 		}
 	}
 
-	private String getRandom() {
-		return RandomStringUtils.randomAlphanumeric(32);
-	}
-
 	// @Deprecated
 	// private String hashBaseSha(final String value) {
 	// return Base64.getEncoder().encodeToString(hashSha(value).getBytes());
 	// }
+
+	private String getRandom() {
+		return RandomStringUtils.randomAlphanumeric(32);
+	}
 
 	private String hashPassword(final String value) {
 		try {
