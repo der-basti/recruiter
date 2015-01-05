@@ -23,7 +23,7 @@ public class HashTest {
 		gen("passwd123", "7MkZdGswgzvk1cDocG4v",
 				"fsbv1UooTJ3hPChjo5HgY9T5caG6TG4xY7Qb10k2T8E=");
 		gen("passWD123-", "7MkZdGswgzvk1cDocG4v",
-				"fsbv1UooTJ3hPChjo5HgY9T5caG6TG4xY7Qb10k2T8E=");
+				"94fEC1wfzgGyqMmaoX+7SG7eOFKocPmY3US6b3uYdQ4=");
 	}
 
 	private void gen(final String pw, final String salt, final String result) {

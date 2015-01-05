@@ -1,5 +1,5 @@
 -- load seed data into the database using SQL statements
--- default password is "passwd123"
+-- default password is "passWD123-"
 
 insert into was_role (name) values ('ADMIN')
 insert into was_role (name) values ('COMPANY')
@@ -16,12 +16,12 @@ insert into was_user_role (user_id, role_id) values ((select id from was_user wh
 
 -- user: u@u.u
 insert into was_address (name, street, streetNumber, zipCode, city, phone) values ('Homer Simpson', 'Street', '1', '12345', 'Springfield', '030 55555')
-insert into was_user (email, password, passwordSalt, address_id) values ('u@u.u', 'fsbv1UooTJ3hPChjo5HgY9T5caG6TG4xY7Qb10k2T8E=', '7MkZdGswgzvk1cDocG4v', (select id from was_address where city like 'Springfield'))
+insert into was_user (email, password, passwordSalt, address_id) values ('u@u.u', '94fEC1wfzgGyqMmaoX+7SG7eOFKocPmY3US6b3uYdQ4=', '7MkZdGswgzvk1cDocG4v', (select id from was_address where city like 'Springfield'))
 insert into was_user_role (user_id, role_id) values ((select id from was_user where email = 'u@u.u'), (select id from was_role where name = 'USER'))
 
 -- user: c@c.c
 insert into was_address (name, street, streetNumber, zipCode, city, phone) values ('Bill Gates', 'Microsoft Way', '1', '98052', 'Redmond', '+1 425-882-8080')
-insert into was_user (email, password, passwordSalt, address_id) values ('c@c.c', 'fsbv1UooTJ3hPChjo5HgY9T5caG6TG4xY7Qb10k2T8E=', '7MkZdGswgzvk1cDocG4v', (select id from was_address where city like 'Redmond'))
+insert into was_user (email, password, passwordSalt, address_id) values ('c@c.c', '94fEC1wfzgGyqMmaoX+7SG7eOFKocPmY3US6b3uYdQ4=', '7MkZdGswgzvk1cDocG4v', (select id from was_address where city like 'Redmond'))
 insert into was_user_role (user_id, role_id) values ((select id from was_user where email = 'c@c.c'), (select id from was_role where name = 'COMPANY'))
 
 -- example article

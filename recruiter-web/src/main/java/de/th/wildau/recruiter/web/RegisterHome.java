@@ -81,6 +81,7 @@ public class RegisterHome extends AbstractHome {
 	public String register() {
 		log.info("register new user");
 		try {
+			this.userService.validatePassword(this.password);
 			this.user.getRoles().add(this.userService.getRole(this.role));
 			this.userService.register(this.email, this.password, this.role,
 					this.user, this.address);

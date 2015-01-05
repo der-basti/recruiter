@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -51,12 +50,9 @@ public class User extends BaseEntity<User> {
 	@Column(length = 63, nullable = false, unique = true)
 	private String email;
 
-	@NotBlank
-	// FIXME @Size(min = 8, max = 255)
-	// FIXME @Pattern(regexp =
-	// "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_:;,@#$%]).{8,20})", message =
-	// "Das Passwort muss mindestens 8 Zeichen lang sein und Sonderzeichen, Ziffern und Buchstaben enthalten.")
+	@NotEmpty
 	@Column(nullable = false)
+	// save the hash
 	private String password;
 
 	@Column(length = 32, nullable = false, updatable = false)

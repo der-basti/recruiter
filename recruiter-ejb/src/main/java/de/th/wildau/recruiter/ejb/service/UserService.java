@@ -41,6 +41,8 @@ import de.th.wildau.recruiter.ejb.model.User;
 @PermitAll
 public class UserService extends Crud {
 
+	private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_:;,@#$%]).{8,20})";
+
 	/**
 	 * Generate the registration/activation mail.
 	 * 
@@ -170,6 +172,8 @@ public class UserService extends Crud {
 		if (!dbPW.equals(checkPW)) {
 			throw new BusinessException(BusinessError.INVALID_PASSWORD);
 		}
+		// check new pw
+		validatePassword(newPassword);
 		// change password
 		u.setPasswordSalt(getRandom());
 		u.setPassword(hashPassword(newPassword + u.getPasswordSalt()));
@@ -295,7 +299,12 @@ public class UserService extends Crud {
 		final Root<User> r = cq.from(User.class);
 		cq.orderBy(cb.asc(r.get("email")));
 		final List<User> res = this.em.createQuery(cq).getResultList();
-		res.stream().forEach(x -> x.getRoles().size());
+		// res.stream().forEach(x -> x.getRoles().size());
+		for (final User i : res) {
+			for (final Role j : i.getRoles()) {
+				j.getName();
+			}
+		}
 		return res;
 	}
 
@@ -370,6 +379,19 @@ public class UserService extends Crud {
 		merge(u);
 		this.mailService.send("Your recruter profile changed",
 				"Hello, your profile has been changed.", oldEmail);
+	}
+
+	/**
+	 * Check new Password again the constrains.
+	 * 
+	 * @param password
+	 * @throws BusinessException
+	 */
+	public final void validatePassword(final String password)
+			throws BusinessException {
+		if (!password.matches(PASSWORD_PATTERN)) {
+			throw new BusinessException(BusinessError.PASSWORD_PATTERN);
+		}
 	}
 
 	private String getRandom() {

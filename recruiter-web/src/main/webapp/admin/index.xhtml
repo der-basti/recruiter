@@ -9,14 +9,14 @@
 	<ui:define name="content">
 		<h1>Übersicht</h1>
 
-		<p:dataTable id="dtUsers" value="#{dashboardAdminHome.users}" var="item">
+		<p:dataTable id="dtUsers" value="#{dashboardAdminHome.users}"
+			var="item">
 			<p:column headerText="email">
         		#{item.email}
         	</p:column>
 			<p:column headerText="roles">
-				<ui:repeat value="#{item.roles}" var="j">
-					#{dashboardAdmin.roleSet2String(j)}
-				</ui:repeat>
+				<h:outputText id="roles"
+					value="#{dashboardAdminHome.roleSet2String(item.roles)}" />
 			</p:column>
 			<p:column headerText="activationKey">
         		#{item.activationKey}
