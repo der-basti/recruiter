@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.LocalBean;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -35,11 +36,16 @@ import de.th.wildau.recruiter.ejb.RoleName;
 import de.th.wildau.recruiter.ejb.model.Address;
 import de.th.wildau.recruiter.ejb.model.Role;
 import de.th.wildau.recruiter.ejb.model.User;
+import de.th.wildau.recruiter.ejb.service.remote.UserServiceRemote;
 
 @Stateless
 @LocalBean
+@Remote(UserServiceRemote.class)
 @PermitAll
 public class UserService extends Crud {
+
+	/** TOP SECRET application key (salt & papper) */
+	private static final String PAPPER = "oJizjnhXGuQsRilM";
 
 	private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_:;,@#$%]).{8,20})";
 
@@ -67,9 +73,6 @@ public class UserService extends Crud {
 				.append(MailService.LINE_BREAK).append("Your recruiter team");
 		return sb.toString();
 	}
-
-	// @Inject
-	// private Crud crud;
 
 	private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -112,11 +115,6 @@ public class UserService extends Crud {
 		signinAttemptsReset(email.toLowerCase());
 	}
 
-	/**
-	 * Handle signin attempts after signin (reset to zero).
-	 * 
-	 * @param email
-	 */
 	/**
 	 * Handle signin attempts before signin
 	 * 
@@ -239,9 +237,18 @@ public class UserService extends Crud {
 		}
 	}
 
+	/**
+	 * Get the address from a user.
+	 * 
+	 * @param email
+	 * @return address or null
+	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public Address getAddress(final String email) {
 		final Address address = findUser(email).getAddress();
+		if (address == null) {
+			return null;
+		}
 		address.getName();
 		return address;
 	}

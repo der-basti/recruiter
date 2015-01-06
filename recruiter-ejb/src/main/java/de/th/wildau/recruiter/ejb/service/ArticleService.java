@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.LocalBean;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
@@ -33,9 +34,11 @@ import de.th.wildau.recruiter.ejb.model.Price;
 import de.th.wildau.recruiter.ejb.model.Purchase;
 import de.th.wildau.recruiter.ejb.model.Role;
 import de.th.wildau.recruiter.ejb.model.User;
+import de.th.wildau.recruiter.ejb.service.remote.ArticleServiceRemote;
 
 @Stateless
 @LocalBean
+@Remote(ArticleServiceRemote.class)
 public class ArticleService extends Crud {
 
 	private static final Logger log = LoggerFactory
@@ -126,6 +129,12 @@ public class ArticleService extends Crud {
 		save(comment);
 	}
 
+	/**
+	 * Delete a article from current user.
+	 * 
+	 * @param articleId
+	 * @throws BusinessException
+	 */
 	@RolesAllowed({ "ADMIN", "COMPANY", "USER" })
 	public void delete(final Long articleId) throws BusinessException {
 		final Article a = findArticle(articleId);
